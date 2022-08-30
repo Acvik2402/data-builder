@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Users</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link type="text/css" rel="stylesheet" th:href="@{css/bootstrap.min.css}" />
+</head>
+<body>
+<div th:switch="${users}">
+    <h2 th:case="null">No users found</h2>
+    <div th:case="*">
+        <h2>Users</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Имя</th>
+                <th>Фамилия</th>
+                <th>Последний контакт</th>
+                <th>Еще не дошли</th>
+                <th>Были один раз</th>
+                <th>Есть в чате</th>
+                <th>Нет в чате</th>
+                <th>Интересуется играми</th>
+                <th>Кто привёл</th>
+                <th>Сколько игр посетил</th>
+                <th>Средняя частота посещений</th>
+                <th>Абонемент</th>
+                <th>Игровой счет</th>
+                <th>Дополнительная информация</th>
+                <th>ссылка на вк</th>
+                <th>ссылка на телеграмм</th>
+                <th>был ли контакт</th>
+                <th>список групп</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="user:${users}">
+                <td th:text="${user.firstName}"></td>
+                <td th:text="${user.lastName}"></td>
+                <td th:date="${user.lastContact}"></td>
+                <td th:text="${user.hasNotVisitYet}"></td>
+                <td th:text="${user.beenHereOneTime}"></td>
+                <td th:text="${user.chatName}"></td>
+                <td th:text="${user.isInTheChat}"></td>
+                <td th:text="${user.interestGames}"></td>
+                <td th:text="${user.whoInviteHim}"></td>
+                <td th:text="${user.gamesCount}"></td>
+                <td th:text="${user.averageOfVisits}"></td>
+                <td th:text="${user.subscriptions}"></td>
+                <td th:text="${user.gameAccount}"></td>
+                <td th:text="${user.additionalInformation}"></td>
+                <td th:text="${user.vkLink}"></td>
+                <td th:text="${user.tgLink}"></td>
+                <td th:text="${user.wasContacted}"></td>
+                <td>
+                    <select>
+				<span th:each="group,iterStat : ${user.groups}">
+					<option><span th:text="${group.groupName}"/><th:block
+                            th:if="${!iterStat.last}">,</th:block></option></span>
+                    </select>
+                </td>
+                <td><a th:href="@{/users/edit/{id}(id=${user.id})}">Edit</a></td>
+                <td><a th:href="@{/users/user-delete/{id}(id=${user.id})}">Delete</a></td>
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p><a href="/users/user-create">Create user</a></p>
+
+    <p><a href="/group/groups">Group List</a></p>
+    <p><a href="/analytic/analytics">Analytic List</a></p>
+    <p><a href="/logout">Log Out</a></p>
+
+</div>
+</body>
+</html>

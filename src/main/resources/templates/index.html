@@ -1,0 +1,59 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <title>Login page</title>
+</head>
+<body>
+<div>
+<!--  With GitHub: <a href="/oauth2/authorization/github">click here</a>-->
+<!--</div>-->
+<div>
+  Login with VK: <a href="/vk/authorize">click here</a>
+</div>
+<!--<div>-->
+<!--  With Google: <a href="/oauth2/authorization/google">click here</a>-->
+<!--</div>-->
+<!--<div class="container authenticated" style="display:none">-->
+<!--  Logged in as: <span id="user"></span>-->
+<!--  <div>-->
+<!--    <button onClick="logout()" class="btn btn-primary">Logout</button>-->
+<!--  </div>-->
+
+  <p><a href="/users/user-list">User List</a></p>
+  <p><a href="/group/groups">Group List</a></p>
+  <p><a href="/analytic/analytics">Analytic List</a></p>
+  <p><a href="/logout">Log Out</a></p>
+</div>
+<!--<script type="text/javascript">-->
+<!--  var logout = function() {-->
+<!--    $.post("/logout", function() {-->
+<!--      $("#user").html('');-->
+<!--      $(".unauthenticated").show();-->
+<!--      $(".authenticated").hide();-->
+<!--    })-->
+<!--    return true;-->
+<!--  }-->
+<!--  $.get("/user", function(data) {-->
+<!--    $("#user").html(data.name);-->
+<!--    $(".unauthenticated").hide()-->
+<!--    $(".authenticated").show()-->
+<!--  });-->
+<!--</script>-->
+<!--<script type="text/javascript" src="/webjars/js-cookie/js.cookie.js">-->
+<!--  $.ajaxSetup({-->
+<!--    beforeSend : function(xhr, settings) {-->
+<!--      if (settings.type == 'POST' || settings.type == 'PUT'-->
+<!--              || settings.type == 'DELETE') {-->
+<!--        if (!(/^http:.*/.test(settings.url) || /^https:.*/-->
+<!--                .test(settings.url))) {-->
+<!--          // Only send the token to relative URLs i.e. locally.-->
+<!--          xhr.setRequestHeader("X-XSRF-TOKEN",-->
+<!--                  Cookies.get('XSRF-TOKEN'));-->
+<!--        }-->
+<!--      }-->
+<!--    }-->
+<!--  });-->
+<!--</script>-->
+</body>
+</html>

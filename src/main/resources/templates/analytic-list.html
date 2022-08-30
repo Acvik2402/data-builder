@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+<head>
+    <meta charset="UTF-8">
+    <title>Analytic</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link type="text/css" rel="stylesheet" th:href="@{css/bootstrap.min.css}" />
+</head>
+<body>
+<form th:action="@{/group/scan-group/}">
+    <input type="text" th:name="vkLink" placeholder="Scan group">
+    <!--    <input type="text" th:name="vkLink" placeholder="Scan group">    -->
+</form>
+<div th:switch="${analytics}">
+    <h2 th:case="null">No analytics found</h2>
+    <div th:case="*">
+        <h2>Analytic groups</h2>
+        <table>
+            <thead>
+            <tr>
+                <th>Название Группы</th>
+                <th>Список пользователей</th>
+                <th>Дата</th>
+                <th>Вошел или вышел</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr th:each="analytic:${analytics}">
+                <td th:text="${analytic.group.groupName}"></td>
+                <td>
+				<span th:each="user,iterStat : ${analytic.users}">
+					<span th:text="${user.firstName} +' '+ ${user.lastName}"/><th:block th:if="${!iterStat.last}">,</th:block>
+				</span>
+                </td>
+                <td th:date="${analytic.date}"></td>
+                <td th:text="${analytic.inOrOut}"></td>
+<!--                <td><a th:href="@{/edit/{id}(id=${group.id})}">Edit</a></td>-->
+<!--                <td><a th:href="@{group-delete/{id}(id=${group.id})}">Delete</a></td>-->
+            </tr>
+            </tbody>
+        </table>
+    </div>
+    <p><a href="/users/user-list">User List</a></p>
+    <p><a href="/group/groups">Group List</a></p>
+    <p><a href="/logout">Log Out</a></p>
+</div>
+</body>
+</html>

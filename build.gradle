@@ -1,0 +1,58 @@
+plugins {
+    id 'org.springframework.boot' version '2.7.1'
+    id 'io.spring.dependency-management' version '1.0.11.RELEASE'
+    id 'java'
+}
+
+group = 'com.double-dice'
+version = '0.0.1-SNAPSHOT'
+sourceCompatibility = '1.8'
+
+configurations {
+    compileOnly {
+        extendsFrom annotationProcessor
+    }
+}
+
+repositories {
+    mavenCentral()
+}
+
+dependencies {
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springframework.boot:spring-boot-starter-validation'
+    // https://mvnrepository.com/artifact/org.modelmapper.extensions/modelmapper-spring
+    implementation group: 'org.modelmapper.extensions', name: 'modelmapper-spring', version: '1.1.0'
+    //security
+    implementation 'org.springframework.boot:spring-boot-starter-security:2.7.0'
+    //oauth2
+//    implementation 'org.springframework.security.oauth.boot:spring-security-oauth2-autoconfigure:2.6.8'
+//    testImplementation 'org.springframework.security:spring-security-test'
+    // https://mvnrepository.com/artifact/org.springframework.boot/spring-boot-starter-oauth2-client
+//    implementation 'org.springframework.boot:spring-boot-starter-oauth2-client:2.7.0'
+
+    developmentOnly 'org.springframework.boot:spring-boot-devtools'
+    compileOnly 'org.projectlombok:lombok'
+    runtimeOnly 'org.postgresql:postgresql'
+    annotationProcessor 'org.projectlombok:lombok'
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
+    implementation 'org.springframework.boot:spring-boot-starter-thymeleaf'
+    testImplementation 'junit:junit'
+    implementation('com.vk.api:sdk:1.0.14') {
+        exclude group: 'org.slf4j'
+        //Binding for Log4J -->
+        exclude group: 'org.apache.logging.log4j'
+    }
+    // https://mvnrepository.com/artifact/org.apache.commons/commons-collections4
+    implementation group: 'org.apache.commons', name: 'commons-collections4', version: '4.4'
+    // https://mvnrepository.com/artifact/org.apache.httpcomponents/httpclient
+    implementation group: 'org.apache.httpcomponents', name: 'httpclient', version: '4.5.13'
+    // https://mvnrepository.com/artifact/org.webjars/js-cookie
+    implementation 'org.webjars:js-cookie:2.2.1'
+
+}
+
+tasks.named('test') {
+    useJUnitPlatform()
+}

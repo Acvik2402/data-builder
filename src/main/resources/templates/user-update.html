@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Update User</title>
+</head>
+<body>
+<form action="#"
+      th:action="@{/users/user-update/{id}(id=${user.id})}"
+      th:object="${user}"
+      method="post">
+    <label for="id">ID</label>
+    <input readonly type="number" th:field="*{id}" id="id" placeholder="ID">
+    </br>
+    <label for="firstName">Имя</label>
+    <input type="text" th:field="*{firstName}" id="firstName" placeholder="Имя">
+    <span th:if="${#fields.hasErrors('firstName')}" th:errors="*{firstName}"></span>
+    </br>
+    <label for="lastName">Фамилия</label>
+    <input type="text" th:field="*{lastName}" id="lastName" placeholder="Фамилия">
+    <span th:if="${#fields.hasErrors('lastName')}" th:errors="*{lastName}"></span>
+    </br>
+    <label for="lastContact">Последний контакт</label>
+    <input type="date" th:field="*{lastContact}" id="lastContact" placeholder="Последний контакт">
+    <span th:if="${#fields.hasErrors('lastContact')}" th:errors="*{lastContact}"></span>
+    </br>
+    <label for="hasNotVisitYet">Еще не дошли</label>
+    <input type="checkbox" th:field="*{hasNotVisitYet}" id="hasNotVisitYet" placeholder="Еще не дошли">
+    <span th:if="${#fields.hasErrors('hasNotVisitYet')}" th:errors="*{hasNotVisitYet}"></span>
+    </br>
+    <label for="beenHereOneTime">Были один раз</label>
+    <input type="checkbox" th:field="*{beenHereOneTime}" id="beenHereOneTime" placeholder="Были один раз">
+    <span th:if="${#fields.hasErrors('beenHereOneTime')}" th:errors="*{beenHereOneTime}"></span>
+    </br>
+    <label for="chatName">Есть в чате</label>
+    <input type="text" th:field="*{chatName}" id="chatName" placeholder="Есть в чате">
+    <span th:if="${#fields.hasErrors('chatName')}" th:errors="*{chatName}"></span>
+    </br>
+    <label for="isInTheChat">Нет в чате</label>
+    <input type="checkbox" th:field="*{isInTheChat}" id="isInTheChat" placeholder="Нет в чате">
+    <span th:if="${#fields.hasErrors('isInTheChat')}" th:errors="*{isInTheChat}"></span>
+    </br>
+    <label for="interestGames">Интересуется играми</label>
+    <input type="text" th:field="*{interestGames}" id="interestGames" placeholder="Интересуется играми">
+    <span th:if="${#fields.hasErrors('interestGames')}" th:errors="*{interestGames}"></span>
+    </br>
+    <label for="whoInviteHim">Кто привёл</label>
+    <input type="text" th:field="*{whoInviteHim}" id="whoInviteHim" placeholder="Кто привёл">
+    <span th:if="${#fields.hasErrors('whoInviteHim')}" th:errors="*{whoInviteHim}"></span>
+    </br>
+    <label for="gamesCount">Сколько игр посетил</label>
+    <input type="number" th:field="*{gamesCount}" id="gamesCount" placeholder="Сколько игр посетил">
+    <span th:if="${#fields.hasErrors('gamesCount')}" th:errors="*{gamesCount}"></span>
+    </br>
+    <label for="averageOfVisits">Средняя частота посещений</label>
+    <input type="number" th:field="*{averageOfVisits}" id="averageOfVisits" placeholder="Средняя частота посещений">
+    <span th:if="${#fields.hasErrors('averageOfVisits')}" th:errors="*{averageOfVisits}"></span>
+    </br>
+    <label for="subscriptions">Абонемент</label>
+    <input type="text" th:field="*{subscriptions}" id="subscriptions" placeholder="Абонемент">
+    <span th:if="${#fields.hasErrors('subscriptions')}" th:errors="*{subscriptions}"></span>
+    </br>
+    <label for="gameAccount">Игровой счет</label>
+    <input type="number" th:field="*{gameAccount}" id="gameAccount" placeholder="Игровой счет">
+    <span th:if="${#fields.hasErrors('gameAccount')}" th:errors="*{gameAccount}"></span>
+    </br>
+    <label for="additionalInformation">Дополнительная информация</label>
+    <input type="text" th:field="*{additionalInformation}" id="additionalInformation" placeholder="Дополнительная информация">
+    <span th:if="${#fields.hasErrors('additionalInformation')}" th:errors="*{additionalInformation}"></span>
+    </br>
+    <label for="vkLink">ссылка на вк</label>
+    <input type="text" th:field="*{vkLink}" id="vkLink" placeholder="ссылка на вк">
+    <span th:if="${#fields.hasErrors('vkLink')}" th:errors="*{vkLink}"></span>
+    </br>
+    <label for="tgLink">ссылка на телеграмм</label>
+    <input type="text" th:field="*{tgLink}" id="tgLink" placeholder="ссылка на телеграмм">
+    <span th:if="${#fields.hasErrors('tgLink')}" th:errors="*{tgLink}"></span>
+    </br>
+    <label for="wasContacted">был ли контакт</label>
+    <input type="checkbox" th:field="*{wasContacted}" id="wasContacted" placeholder="был ли контакт">
+    <span th:if="${#fields.hasErrors('wasContacted')}" th:errors="*{wasContacted}"></span>
+    </br>
+    <label for="groups">список групп</label>
+    <input type="text" th:field="*{groups}" id="groups" placeholder="список групп">
+    <span th:if="${#fields.hasErrors('groups')}" th:errors="*{groups}"></span>
+    </br>
+    <input type="submit" value="Update User">
+</form>
+</body>
+</html>

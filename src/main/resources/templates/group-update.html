@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html lang="en" xmlns:th="http://www.w3.org/1999/xhtml">
+<head>
+    <meta charset="UTF-8">
+    <title>Update Group</title>
+</head>
+<body>
+<form action="#"
+      th:action="@{/group/group-update/{id}(id=${group.id})}"
+      th:object="${group}"
+      method="post">
+    <label for="id">ID</label>
+    <input readonly type="number" th:field="*{id}" id="id" placeholder="ID">
+    </br>
+    <label for="groupName">Название</label>
+    <input type="text" th:field="*{groupName}" id="groupName" placeholder="Название">
+    <span th:if="${#fields.hasErrors('groupName')}" th:errors="*{groupName}"></span>
+    </br>
+    <label for="vkLink">Ссылка на вк</label>
+    <input type="text" th:field="*{vkLink}" id="vkLink" placeholder="Ссылка на вк">
+    <span th:if="${#fields.hasErrors('vkLink')}" th:errors="*{vkLink}"></span>
+    </br>
+    <label for="users">Список пользователей</label>
+    <input type="text" th:field="*{users}" id="users" placeholder="Список пользователей">
+    <span th:if="${#fields.hasErrors('users')}" th:errors="*{users}"></span>
+    </br>
+    <label for="additionalInformation">Дополнительная информация</label>
+    <input type="text" th:field="*{additionalInformation}" id="additionalInformation" placeholder="Дополнительная информация">
+    <span th:if="${#fields.hasErrors('additionalInformation')}" th:errors="*{additionalInformation}"></span>
+    </br>
+    <input type="submit" value="Update Group">
+</form>
+</body>
+</html>
