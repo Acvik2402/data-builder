@@ -22,9 +22,9 @@ import java.util.Set;
 public class AnalyticDTO {
     private long id;
     private Group group;
-    private Set<User> users;
+    private Set<User> exitUsers;
+    private Set<User> joinedUsers;
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @CreatedDate
     private Date date;
-    private boolean inOrOut; //if true - user is  entered
 }

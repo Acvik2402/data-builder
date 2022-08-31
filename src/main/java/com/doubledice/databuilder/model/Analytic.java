@@ -3,11 +3,9 @@ package com.doubledice.databuilder.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
-import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 /**
@@ -24,15 +22,16 @@ public class Analytic {
     @OneToOne(targetEntity = Group.class)
     private Group group;
     @ManyToMany(targetEntity = User.class)
-    private Set<User> users;
+    private Set<User> exitUsers;
+    @ManyToMany(targetEntity = User.class)
+    private Set<User> joinedUsers;
 
     @CreatedDate
     private Date date = new Date();
 
-    private boolean inOrOut; //if true - user is  entered
-    public Analytic(Group group, Set<User> users, boolean inOrOut) {
+    public Analytic(Group group, Set<User> exitUsers, Set<User> joinedUsers, boolean inOrOut) {
         this.group = group;
-        this.users = users;
-        this.inOrOut = inOrOut;
+        this.exitUsers = exitUsers;
+        this.joinedUsers = joinedUsers;
     }
 }

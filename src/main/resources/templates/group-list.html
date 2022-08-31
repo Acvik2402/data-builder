@@ -9,9 +9,14 @@
 <body>
 <form th:action="@{/group/scan-group/}">
     <input type="text" th:name="vkLink" placeholder="Scan group">
-    <!--    <input type="text" th:name="vkLink" placeholder="Scan group">    -->
 </form>
 <div th:switch="${groups}">
+
+    <p><a href="/group-create">Create group</a></p>
+    <p><a href="/users/user-list">User List</a></p>
+    <p><a href="/analytic/analytics">Analytic List</a></p>
+    <p><a href="/logout">Log Out</a></p>
+
     <h2 th:case="null">No groups found</h2>
     <div th:case="*">
         <h2>Groups</h2>
@@ -19,7 +24,7 @@
             <thead>
             <tr>
                 <th>Название</th>
-                <th>Ссылка на вк</th>
+                <th>Ссылка на группу вк</th>
                 <th>Список пользователей</th>
                 <th>Дополнительная информация</th>
             </tr>

@@ -9,9 +9,13 @@
 <body>
 <form th:action="@{/group/scan-group/}">
     <input type="text" th:name="vkLink" placeholder="Scan group">
-    <!--    <input type="text" th:name="vkLink" placeholder="Scan group">    -->
 </form>
 <div th:switch="${analytics}">
+
+    <p><a href="/users/user-list">User List</a></p>
+    <p><a href="/group/groups">Group List</a></p>
+    <p><a href="/logout">Log Out</a></p>
+
     <h2 th:case="null">No analytics found</h2>
     <div th:case="*">
         <h2>Analytic groups</h2>
@@ -19,9 +23,9 @@
             <thead>
             <tr>
                 <th>Название Группы</th>
-                <th>Список пользователей</th>
+                <th>Список вышедших пользователей</th>
+                <th>Список вошедших пользователей</th>
                 <th>Дата</th>
-                <th>Вошел или вышел</th>
             </tr>
             </thead>
             <tbody>
@@ -29,7 +33,17 @@
                 <td th:text="${analytic.group.groupName}"></td>
                 <td>
                     <select>
-				        <span th:each="user,iterStat : ${analytic.users}">
+				        <span th:each="user,iterStat : ${analytic.exitUsers}">
+					        <option>
+                                <span th:text="${user.firstName} +' '+ ${user.lastName}  +', id'+ ${user.vkLink}"/><th:block
+                            th:if="${!iterStat.last}">,</th:block>
+                            </option>
+				        </span>
+                    </select>
+                </td>
+                <td>
+                    <select>
+				        <span th:each="user,iterStat : ${analytic.joinedUsers}">
 					        <option>
                                 <span th:text="${user.firstName} +' '+ ${user.lastName}  +', id'+ ${user.vkLink}"/><th:block
                             th:if="${!iterStat.last}">,</th:block>
@@ -38,7 +52,6 @@
                     </select>
                 </td>
                 <td th:date="${analytic.date}"></td>
-                <td th:text="${analytic.inOrOut}"></td>
                 <!--                <td><a th:href="@{/edit/{id}(id=${group.id})}">Edit</a></td>-->
                 <!--                <td><a th:href="@{group-delete/{id}(id=${group.id})}">Delete</a></td>-->
             </tr>

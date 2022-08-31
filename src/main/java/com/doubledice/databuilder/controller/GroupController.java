@@ -5,6 +5,7 @@ import com.doubledice.databuilder.service.AnalyticService;
 import com.doubledice.databuilder.service.GroupService;
 import com.doubledice.databuilder.service.VkService;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import com.vk.api.sdk.exceptions.ApiAccessException;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import lombok.AllArgsConstructor;
@@ -34,6 +35,7 @@ public class GroupController {
 
     @GetMapping("/groups")
     public String findAll(Model model) {
+//        List<GroupDTO> groups = groupService.findAll().stream().map(group -> objectMapper.convertValue(group, GroupDTO.class)).collect(Collectors.toList());
         List<Group> groups = groupService.findAll();
         model.addAttribute("groups", groups);
         return "group-list";
@@ -91,7 +93,7 @@ public class GroupController {
      * and save result in Analytic table
      * else: just create new table with users from this group
      */
-    @GetMapping(path ="/scan-group/")
+    @GetMapping(path = "/scan-group/")
     public String scanGroup(@RequestParam String vkLink) {
         vkLink = checkVkLink(vkLink);
         Group group = groupService.findGroupByLink(vkLink);
@@ -104,12 +106,16 @@ public class GroupController {
                 group.setVkLink(vkLink);
                 //todo saving into DB 3 times, should fix it
                 group = groupService.addGroup(group);
-                group.setUsers(vkService.getUsersByGroupLink(vkLink, group));
+                try {
+                    group.setUsers(vkService.getUsersByGroupLink(vkLink, group));
+                } catch (ApiAccessException e) {
+                    group.setAdditionalInformation(e.getMessage());
+                }
                 groupService.addGroup(group);
             }
             return "redirect:/group/groups";
         } catch (ApiException | ClientException e) {
-          e.printStackTrace();
+            e.printStackTrace();
             return "redirect:/group/groups";
         }
 
