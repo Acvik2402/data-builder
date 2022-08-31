@@ -3,8 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Analytic</title>
-    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
-    <link type="text/css" rel="stylesheet" th:href="@{css/bootstrap.min.css}" />
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8"/>
+    <link type="text/css" rel="stylesheet" th:href="@{css/bootstrap.min.css}"/>
 </head>
 <body>
 <form th:action="@{/group/scan-group/}">
@@ -28,14 +28,19 @@
             <tr th:each="analytic:${analytics}">
                 <td th:text="${analytic.group.groupName}"></td>
                 <td>
-				<span th:each="user,iterStat : ${analytic.users}">
-					<span th:text="${user.firstName} +' '+ ${user.lastName}"/><th:block th:if="${!iterStat.last}">,</th:block>
-				</span>
+                    <select>
+				        <span th:each="user,iterStat : ${analytic.users}">
+					        <option>
+                                <span th:text="${user.firstName} +' '+ ${user.lastName}  +', id'+ ${user.vkLink}"/><th:block
+                            th:if="${!iterStat.last}">,</th:block>
+                            </option>
+				        </span>
+                    </select>
                 </td>
                 <td th:date="${analytic.date}"></td>
                 <td th:text="${analytic.inOrOut}"></td>
-<!--                <td><a th:href="@{/edit/{id}(id=${group.id})}">Edit</a></td>-->
-<!--                <td><a th:href="@{group-delete/{id}(id=${group.id})}">Delete</a></td>-->
+                <!--                <td><a th:href="@{/edit/{id}(id=${group.id})}">Edit</a></td>-->
+                <!--                <td><a th:href="@{group-delete/{id}(id=${group.id})}">Delete</a></td>-->
             </tr>
             </tbody>
         </table>

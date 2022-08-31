@@ -1,9 +1,6 @@
 package com.doubledice.databuilder.controller;
 
-import com.doubledice.databuilder.dto.GroupDTO;
-import com.doubledice.databuilder.model.Analytic;
 import com.doubledice.databuilder.model.Group;
-import com.doubledice.databuilder.model.User;
 import com.doubledice.databuilder.service.AnalyticService;
 import com.doubledice.databuilder.service.GroupService;
 import com.doubledice.databuilder.service.VkService;
@@ -11,7 +8,6 @@ import com.fasterxml.jackson.databind.ObjectMapper;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import lombok.AllArgsConstructor;
-import org.apache.commons.collections4.CollectionUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -19,11 +15,8 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
 
 /**
  * @author ponomarev 16.07.2022
@@ -41,7 +34,6 @@ public class GroupController {
 
     @GetMapping("/groups")
     public String findAll(Model model) {
-//        List<GroupDTO> groups = groupService.findAll().stream().map(group -> objectMapper.convertValue(group, GroupDTO.class)).collect(Collectors.toList());
         List<Group> groups = groupService.findAll();
         model.addAttribute("groups", groups);
         return "group-list";
@@ -99,24 +91,13 @@ public class GroupController {
      * and save result in Analytic table
      * else: just create new table with users from this group
      */
-    @RequestMapping(value ="/scan-group/", method = RequestMethod.GET)
+    @GetMapping(path ="/scan-group/")
     public String scanGroup(@RequestParam String vkLink) {
         vkLink = checkVkLink(vkLink);
         Group group = groupService.findGroupByLink(vkLink);
         try {
             if (group != null) {
-                ArrayList<User> dataGroupUserList = (ArrayList<User>) group.getUsers();
-                Set<User> currentGroupUserList = vkService.getUsersByGroupLink(vkLink, group);
-                Set<User> exitUsers = new HashSet<>(CollectionUtils.removeAll(dataGroupUserList, currentGroupUserList));
-                Set<User> joinedUsers = new HashSet<>(CollectionUtils.removeAll(currentGroupUserList, dataGroupUserList));
-                if (!CollectionUtils.isEmpty(exitUsers)) {
-                    Analytic analytic = new Analytic(group, exitUsers, false);
-                    analyticService.addAnalytic(analytic);
-                }
-                if (!CollectionUtils.isEmpty(joinedUsers)) {
-                    Analytic analytic = new Analytic(group, joinedUsers, true);
-                    analyticService.addAnalytic(analytic);
-                }
+                vkService.scanExistingGroup(group, vkLink);
             } else {
                 group = new Group(vkLink, new HashSet<>());
                 group.setGroupName(vkService.getGroupNameByVKLink(vkLink));
@@ -124,9 +105,8 @@ public class GroupController {
                 //todo saving into DB 3 times, should fix it
                 group = groupService.addGroup(group);
                 group.setUsers(vkService.getUsersByGroupLink(vkLink, group));
-//                groupService.addGroup(group);
+                groupService.addGroup(group);
             }
-            groupService.addGroup(group);
             return "redirect:/group/groups";
         } catch (ApiException | ClientException e) {
           e.printStackTrace();

@@ -31,9 +31,10 @@
                 <td>
                 <select>
 				<span th:each="user,iterStat : ${group.users}">
-					<option><span th:text="${user.firstName} +' '+ ${user.lastName}"/><th:block
-                            th:if="${!iterStat.last}">,</th:block></option>
-                    <!--					<span th:text="${user.firstName} +' '+ ${user.lastName}"/><th:block th:if="${!iterStat.last}">,</th:block>-->
+					<option>
+                        <span th:text="${user.firstName} +' '+ ${user.lastName}  +', id'+ ${user.vkLink}"/><th:block
+                            th:if="${!iterStat.last}">,</th:block>
+                    </option>
 				</span>
                 </select>
                 </td>

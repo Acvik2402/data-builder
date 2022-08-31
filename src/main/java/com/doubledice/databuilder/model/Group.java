@@ -1,11 +1,13 @@
 package com.doubledice.databuilder.model;
 
 import com.vk.api.sdk.objects.annotations.Required;
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
-import java.util.List;
 import java.util.Objects;
 import java.util.Set;
 
@@ -21,7 +23,7 @@ public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String groupName=null;
+    private String groupName = null;
     @Column(name = "vk_link", unique = true)
     private String vkLink;
     @Required(value = false)

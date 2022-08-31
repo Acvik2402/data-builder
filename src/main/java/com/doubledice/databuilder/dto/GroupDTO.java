@@ -1,11 +1,12 @@
 package com.doubledice.databuilder.dto;
 
+import com.doubledice.databuilder.model.User;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.util.List;
+import java.util.Set;
 
 /**
  * @author ponomarev 16.07.2022
@@ -18,6 +19,6 @@ public class GroupDTO {
     private long id;
     private String groupName;
     private String vkLink;
-    private List<Long> users;
+    private Set<User> users;
     private String additionalInformation;
 }

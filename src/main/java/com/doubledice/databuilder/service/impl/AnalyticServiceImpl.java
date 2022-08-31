@@ -3,9 +3,7 @@ package com.doubledice.databuilder.service.impl;
 import com.doubledice.databuilder.model.Analytic;
 import com.doubledice.databuilder.repository.AnalyticRepository;
 import com.doubledice.databuilder.service.AnalyticService;
-import lombok.AllArgsConstructor;
-import lombok.NoArgsConstructor;
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
@@ -15,12 +13,10 @@ import java.util.List;
  */
 
 @Service
-@AllArgsConstructor
-@NoArgsConstructor
+@RequiredArgsConstructor
 public class AnalyticServiceImpl implements AnalyticService {
 
-    @Autowired
-    AnalyticRepository analyticRepository;
+    private final AnalyticRepository analyticRepository;
 
     @Override
     public Analytic addAnalytic(Analytic analytic) {

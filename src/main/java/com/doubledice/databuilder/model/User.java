@@ -35,7 +35,7 @@ public class User {
     @OneToMany
     @Column(name = "subscription", nullable = false)
     @ToString.Exclude
-    private List<Subscription> subscriptions;
+    private Set<Subscription> subscriptions;
     private Long gameAccount;
     private String additionalInformation;
     @Column(name = "vk_link", unique = true)
