@@ -44,8 +44,8 @@
                 </select>
                 </td>
                 <td th:text="${group.additionalInformation}"></td>
-                <td><a th:href="@{/edit/{id}(id=${group.id})}">Edit</a></td>
-                <td><a th:href="@{group-delete/{id}(id=${group.id})}">Delete</a></td>
+                <td><a th:href="@{/group/edit/{id}(id=${group.id})}">Edit</a></td>
+                <td><a th:href="@{/group/group-delete/{id}(id=${group.id})}">Delete</a></td>
             </tr>
             </tbody>
         </table>

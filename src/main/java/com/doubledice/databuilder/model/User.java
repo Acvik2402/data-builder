@@ -42,7 +42,7 @@ public class User {
     private String vkLink;
     private String tgLink;
     private Boolean wasContacted;
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ToString.Exclude
     private Set<Group> groups;
 

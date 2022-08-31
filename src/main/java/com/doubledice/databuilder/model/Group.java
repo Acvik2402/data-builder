@@ -27,7 +27,7 @@ public class Group {
     @Column(name = "vk_link", unique = true)
     private String vkLink;
     @Required(value = false)
-    @ManyToMany
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ToString.Exclude
     private Set<User> users;
     @Required(value = false)
