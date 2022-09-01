@@ -1,0 +1,48 @@
+spring:
+  jackson:
+    serialization:
+      indent-output: true
+  jpa:
+    database: POSTGRESQL
+    show-sql: true
+    hibernate:
+      ddl-auto: create
+    generate-ddl: true
+    properties:
+      hibernate:
+        dialect: org.hibernate.dialect.PostgreSQL95Dialect
+    defer-datasource-initialization: true
+  datasource:
+    url: ${DB_URL}?createDatabaseIfNotExist=true
+    username: ${DB_USERNAME}
+    password: ${DB_PASS}
+    driverClassName: org.postgresql.Driver
+  sql:
+    init:
+      platform: postgres
+  security:
+    oauth2:
+      client:
+        registration:
+          vk-app:
+            provider: vk
+            clientId: ${CLIENT_ID}
+            clientSecret: ${CLIENT_SECRET}
+            serviceSecret: ${SERVICE_SECRET:}
+            client-authentication-method: basic
+            authorization-grant-type: authorization_code
+            group_ids: "72574230"
+            scope:
+              - manage
+            redirect-uri: "http://localhost/vk/code"
+        provider:
+          vk:
+            authorization-uri: https://oauth.vk.com/authorize
+            token-uri: https://oauth.vk.com/access_token
+            user-info-uri: https://api.vk.com/method/users.get
+  main:
+    allow-circular-references: true
+server:
+  port: 80
+
+
