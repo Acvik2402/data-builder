@@ -29,13 +29,13 @@ public class Group {
     @Required(value = false)
     @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
     @ToString.Exclude
-    private Set<User> users;
+    private Set<User> vkUsers;
     @Required(value = false)
     private String additionalInformation;
 
     public Group(String vkLink, Set<User> users) {
         this.vkLink = vkLink;
-        this.users = users;
+        this.vkUsers = users;
     }
 
     public Group(String vkLink) {

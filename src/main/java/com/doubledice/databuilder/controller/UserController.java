@@ -17,7 +17,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import javax.validation.Valid;
 import javax.validation.constraints.NotNull;
 import java.util.List;
-import java.util.stream.Collectors;
 
 /**
  * @author ponomarev 30.06.2022
@@ -68,11 +67,10 @@ public class UserController {
 
     @GetMapping("user-delete/{id}")
     public String deleteUser(@PathVariable("id") Long id) {
-    userService.deleteById(id);
+        userService.deleteById(id);
         return "redirect:/users/user-list";
     }
 
-    //todo fix list columns
     @GetMapping("/edit/{id}")
     public String showUpdateForm(@PathVariable("id") Long id, Model model) {
         User user = userService.findUser(id);
@@ -80,6 +78,7 @@ public class UserController {
         model.addAttribute("user", user);
         return "user-update";
     }
+
     @PostMapping("/user-update/{id}")
     public String updateUser(@PathVariable("id") Long id, @Valid User user,
                              BindingResult result, Model model) {
@@ -92,6 +91,7 @@ public class UserController {
 //        userService.addUser(objectMapper.convertValue(user, User.class));
         return "redirect:/users/user-list";
     }
+
 //    @PostMapping("add")
 //    public ResponseEntity<UserDTO> addUser(@Valid @RequestBody UserDTO userDTO) {
 //        return new ResponseEntity<UserDTO>(objectMapper.convertValue(userService.addUser(objectMapper.convertValue(userDTO, User.class)), UserDTO.class), HttpStatus.CREATED);

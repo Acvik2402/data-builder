@@ -107,7 +107,7 @@ public class GroupController {
                 //todo saving into DB 3 times, should fix it
                 group = groupService.addGroup(group);
                 try {
-                    group.setUsers(vkService.getUsersByGroupLink(vkLink, group));
+                    group.setVkUsers(vkService.getUsersByGroupLink(vkLink, group));
                 } catch (ApiAccessException e) {
                     group.setAdditionalInformation(e.getMessage());
                 }

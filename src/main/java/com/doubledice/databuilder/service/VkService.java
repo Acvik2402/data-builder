@@ -12,7 +12,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -49,7 +48,7 @@ public class VkService {
      * @throws ApiException
      */
     //todo wrap into tread pull executor
-    @Transactional
+//    @Transactional
     public Set<User> getUsersByGroupLink(String vkLink, Group group) throws ClientException, ApiException {
         Integer id = beanBuilder.getVk().utils().resolveScreenName(beanBuilder.getServiceActor(), vkLink).execute().getObjectId();
         try {
@@ -94,9 +93,9 @@ public class VkService {
         return beanBuilder.getVk().groups().getByIdObjectLegacy(beanBuilder.getServiceActor()).groupId(id.toString()).execute().get(0).getName();
     }
 
-    @Transactional
+//    @Transactional
     public void scanExistingGroup(Group group, String vkLink) throws ClientException, ApiException {
-        Set<User> dataGroupUserList = group.getUsers();
+        Set<User> dataGroupUserList = group.getVkUsers();
         Set<User> currentGroupUserList = getUsersByGroupLink(vkLink, group);
         Set<User> exitUsers = new HashSet<>(CollectionUtils.removeAll(dataGroupUserList, currentGroupUserList));
         Set<User> joinedUsers = new HashSet<>(CollectionUtils.removeAll(currentGroupUserList, dataGroupUserList));
@@ -104,7 +103,7 @@ public class VkService {
             Analytic analytic = new Analytic(group, exitUsers, joinedUsers, false);
             analyticService.addAnalytic(analytic);
         }
-        group.setUsers(currentGroupUserList);
+        group.setVkUsers(currentGroupUserList);
         groupService.addGroup(group);
     }
 }

@@ -7,6 +7,10 @@
     <link type="text/css" rel="stylesheet" th:href="@{css/bootstrap.min.css}" />
 </head>
 <body>
+<form th:action="@{/group/scan-group/}">
+    <input type="text" th:name="vkLink" placeholder="Scan group">
+</form>
+
 <div th:switch="${users}">
 
     <p><a href="/users/user-create">Create user</a></p>

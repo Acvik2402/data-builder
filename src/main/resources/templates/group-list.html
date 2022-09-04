@@ -35,7 +35,7 @@
                 <td th:text="${group.vkLink}"></td>
                 <td>
                 <select>
-				<span th:each="user,iterStat : ${group.users}">
+				<span th:each="user,iterStat : ${group.vkUsers}">
 					<option>
                         <span th:text="${user.firstName} +' '+ ${user.lastName}  +', id'+ ${user.vkLink}"/><th:block
                             th:if="${!iterStat.last}">,</th:block>
