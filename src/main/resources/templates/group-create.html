@@ -15,9 +15,9 @@
     <input type="text" th:field="*{vkLink}" id="vkLink" placeholder="Ссылка на вк">
     <span th:if="${#fields.hasErrors('vkLink')}" th:errors="*{vkLink}"></span>
     </br>
-    <label for="users">Список пользователей</label>
-    <input type="text" th:field="*{users}" id="users" placeholder="Список пользователей">
-    <span th:if="${#fields.hasErrors('users')}" th:errors="*{users}"></span>
+    <label for="vkUsers">Список пользователей</label>
+    <input type="text" th:field="*{vkUsers}" id="vkUsers" placeholder="Список пользователей">
+    <span th:if="${#fields.hasErrors('users')}" th:errors="*{vkUsers}"></span>
     </br>
     <label for="additionalInformation">Дополнительная информация</label>
     <input type="text" th:field="*{additionalInformation}" id="additionalInformation" placeholder="Дополнительная информация">
