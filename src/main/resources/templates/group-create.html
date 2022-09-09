@@ -17,7 +17,7 @@
     </br>
     <label for="vkUsers">Список пользователей</label>
     <input type="text" th:field="*{vkUsers}" id="vkUsers" placeholder="Список пользователей">
-    <span th:if="${#fields.hasErrors('users')}" th:errors="*{vkUsers}"></span>
+    <span th:if="${#fields.hasErrors('vkUsers')}" th:errors="*{vkUsers}"></span>
     </br>
     <label for="additionalInformation">Дополнительная информация</label>
     <input type="text" th:field="*{additionalInformation}" id="additionalInformation" placeholder="Дополнительная информация">
