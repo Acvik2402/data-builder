@@ -8,6 +8,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -22,30 +23,37 @@ public class GroupServiceImpl implements GroupService {
     private GroupRepository groupRepository;
 
     @Override
+    @Transactional
     public Group addGroup(Group group) {
         return groupRepository.save(group);
     }
 
     @Override
+    @Transactional
     public Group findGroupByLink(String vkLink) {
         return groupRepository.findGroupByVkLink(vkLink).orElse(null);
     }
+
     @Override
+    @Transactional
     public Group findOrCreateGroupByLink(String vkLink) {
         return groupRepository.findGroupByVkLink(vkLink).orElse(new Group(vkLink));
     }
 
     @Override
+    @Transactional
     public List<Group> findAll() {
         return groupRepository.findAll();
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         groupRepository.deleteById(id);
     }
 
     @Override
+    @Transactional
     public Group findGroup(Long id) {
         return groupRepository.findById(id).orElse(null);
     }

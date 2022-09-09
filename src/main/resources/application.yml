@@ -4,7 +4,7 @@ spring:
       indent-output: true
   jpa:
     database: POSTGRESQL
-    show-sql: true
+    show-sql: false
     hibernate:
       ddl-auto: create
     generate-ddl: true
@@ -32,6 +32,10 @@ spring:
             client-authentication-method: basic
             authorization-grant-type: authorization_code
             group_ids: "72574230"
+            defaultUserName: ${DEFAULT_USER_NAME}
+            defaultUserPass: ${DEFAULT_USER_PASS}
+            defaultAdminName: ${DEFAULT_ADMIN_NAME}
+            defaultAdminPass: ${DEFAULT_ADMIN_PASS}
             scope:
               - manage
             redirect-uri: "http://localhost/vk/code"

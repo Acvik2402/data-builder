@@ -21,9 +21,9 @@ public class Analytic {
     private Long id;
     @OneToOne(targetEntity = Group.class)
     private Group group;
-    @ManyToMany(targetEntity = User.class,fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = User.class,fetch = FetchType.EAGER, mappedBy = "id")
     private Set<User> exitUsers;
-    @ManyToMany(targetEntity = User.class,fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @OneToMany(targetEntity = User.class,fetch = FetchType.EAGER, mappedBy = "id")
     private Set<User> joinedUsers;
 
     @CreatedDate
