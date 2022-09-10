@@ -14,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -51,7 +52,6 @@ public class VkService {
      * @throws ClientException
      * @throws ApiException
      */
-    //todo wrap into tread pull executor
 //    @Transactional
     public Set<User> getUsersByGroupLink(String vkLink, Group group) throws ClientException, ApiException {
         Integer id = vkApiClient.utils().resolveScreenName(serviceActor, vkLink).execute().getObjectId();
@@ -97,14 +97,16 @@ public class VkService {
         return vkApiClient.groups().getByIdObjectLegacy(serviceActor).groupId(id.toString()).execute().get(0).getName();
     }
 
-    //    @Transactional
+        @Transactional
     public void scanExistingGroup(Group group, String vkLink) throws ClientException, ApiException {
-        Set<User> dataGroupUserList = group.getVkUsers();
-        Set<User> currentGroupUserList = getUsersByGroupLink(vkLink, group);
-        Set<User> exitUsers = new HashSet<>(CollectionUtils.removeAll(dataGroupUserList, currentGroupUserList));
-        Set<User> joinedUsers = new HashSet<>(CollectionUtils.removeAll(currentGroupUserList, dataGroupUserList));
+        Set<User> dataGroupUserList = new HashSet<>(group.getVkUsers());
+        Set<User> currentGroupUserList = new HashSet<>(getUsersByGroupLink(vkLink, group));
+        Set<User> exitUsers = (Set<User>) ((HashSet<User>) dataGroupUserList).clone();
+        exitUsers.removeAll(currentGroupUserList);
+        Set<User> joinedUsers = (Set<User>) ((HashSet<User>) currentGroupUserList).clone();
+        joinedUsers.removeAll(dataGroupUserList);
         if (!CollectionUtils.isEmpty(exitUsers) || !CollectionUtils.isEmpty(joinedUsers)) {
-            Analytic analytic = new Analytic(group, exitUsers, joinedUsers, false);
+            Analytic analytic = new Analytic(group, exitUsers, joinedUsers);
             analyticService.addAnalytic(analytic);
         }
         group.setVkUsers(currentGroupUserList);

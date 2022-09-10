@@ -31,7 +31,7 @@ public class Analytic {
     @CreatedDate
     private Date date = new Date();
 
-    public Analytic(Group group, Set<User> exitUsers, Set<User> joinedUsers, boolean inOrOut) {
+    public Analytic(Group group, Set<User> exitUsers, Set<User> joinedUsers) {
         this.group = group;
         this.exitUsers = exitUsers;
         this.joinedUsers = joinedUsers;
