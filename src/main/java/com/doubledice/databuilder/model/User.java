@@ -61,7 +61,7 @@ public class User {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         User user = (User) o;
-        return id != null && Objects.equals(id, user.id);
+        return id != null && Objects.equals(id, user.id) && Objects.equals(vkLink, user.vkLink);
     }
 
     @Override
@@ -84,7 +84,7 @@ public class User {
                 ", whoInviteHim='" + whoInviteHim + '\'' +
                 ", gamesCount=" + gamesCount +
                 ", averageOfVisits=" + averageOfVisits +
-                ", subscriptions=" + subscriptions +
+//                ", subscriptions=" + subscriptions +
                 ", gameAccount=" + gameAccount +
                 ", additionalInformation='" + additionalInformation + '\'' +
                 ", vkLink='" + vkLink + '\'' +

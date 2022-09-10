@@ -6,6 +6,7 @@ import com.doubledice.databuilder.service.AnalyticService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -19,6 +20,7 @@ public class AnalyticServiceImpl implements AnalyticService {
     private final AnalyticRepository analyticRepository;
 
     @Override
+    @Transactional
     public Analytic addAnalytic(Analytic analytic) {
         return analyticRepository.save(analytic);
     }

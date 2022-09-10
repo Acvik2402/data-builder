@@ -58,7 +58,7 @@ public class Group {
         if (this == o) return true;
         if (o == null || Hibernate.getClass(this) != Hibernate.getClass(o)) return false;
         Group group = (Group) o;
-        return id != null && Objects.equals(id, group.id);
+        return id != null && Objects.equals(id, group.id) && Objects.equals(vkLink, group.vkLink);
     }
 
     @Override
