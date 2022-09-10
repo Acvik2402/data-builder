@@ -9,6 +9,7 @@ import lombok.NoArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.transaction.Transactional;
 import java.util.List;
 
 /**
@@ -24,6 +25,7 @@ public class UserServiceImpl implements UserService {
     private GroupRepository groupRepository;
 
     @Override
+    @Transactional
     public User addUser(User user) {
         return userRepository.save(user);
     }
@@ -54,6 +56,7 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
+    @Transactional
     public void deleteById(Long id) {
         userRepository.deleteById(id);
     }

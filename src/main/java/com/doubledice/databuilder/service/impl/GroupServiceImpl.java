@@ -29,19 +29,16 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-//    @Transactional
     public Group findGroupByLink(String vkLink) {
         return groupRepository.findGroupByVkLink(vkLink).orElse(null);
     }
 
     @Override
-//    @Transactional
     public Group findOrCreateGroupByLink(String vkLink) {
         return groupRepository.findGroupByVkLink(vkLink).orElse(new Group(vkLink));
     }
 
     @Override
-//    @Transactional
     public List<Group> findAll() {
         return groupRepository.findAll();
     }
@@ -53,7 +50,6 @@ public class GroupServiceImpl implements GroupService {
     }
 
     @Override
-//    @Transactional
     public Group findGroup(Long id) {
         return groupRepository.findById(id).orElse(null);
     }

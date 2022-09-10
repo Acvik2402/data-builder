@@ -20,7 +20,6 @@ public class AnalyticServiceImpl implements AnalyticService {
     private final AnalyticRepository analyticRepository;
 
     @Override
-    @Transactional
     public Analytic addAnalytic(Analytic analytic) {
         return analyticRepository.save(analytic);
     }

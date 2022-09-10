@@ -88,7 +88,7 @@ public class GroupController {
     }
 
     /**
-     * @param vkLink link of some group from vk.com
+     * @param vkLink link of some group from vk.com (like URL link or just ID)
      * @return if croup table exist:
      * get in VK API user List
      * create new List and compare with existing list from BD

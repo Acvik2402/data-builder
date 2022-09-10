@@ -14,7 +14,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import javax.transaction.Transactional;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
@@ -37,10 +36,6 @@ public class VkService {
     @Autowired
     @Lazy
     VkApiClient vkApiClient;
-    //    @Autowired @Lazy
-//    UserActor userActor;
-//    @Autowired @Lazy
-//    GroupActor groupActor;
     @Autowired
     @Lazy
     ServiceActor serviceActor;
@@ -52,8 +47,7 @@ public class VkService {
      * @throws ClientException
      * @throws ApiException
      */
-//    @Transactional
-    public Set<User> getUsersByGroupLink(String vkLink, Group group) throws ClientException, ApiException {
+    public synchronized Set<User> getUsersByGroupLink(String vkLink, Group group) throws ClientException, ApiException {
         Integer id = vkApiClient.utils().resolveScreenName(serviceActor, vkLink).execute().getObjectId();
         try {
             Thread.sleep(500);
@@ -97,8 +91,7 @@ public class VkService {
         return vkApiClient.groups().getByIdObjectLegacy(serviceActor).groupId(id.toString()).execute().get(0).getName();
     }
 
-        @Transactional
-    public void scanExistingGroup(Group group, String vkLink) throws ClientException, ApiException {
+    public synchronized void scanExistingGroup(Group group, String vkLink) throws ClientException, ApiException {
         Set<User> dataGroupUserList = new HashSet<>(group.getVkUsers());
         Set<User> currentGroupUserList = new HashSet<>(getUsersByGroupLink(vkLink, group));
         Set<User> exitUsers = (Set<User>) ((HashSet<User>) dataGroupUserList).clone();

@@ -9,6 +9,8 @@ import java.util.Date;
 import java.util.Objects;
 import java.util.Set;
 
+import static javax.persistence.TemporalType.TIMESTAMP;
+
 /**
  * @author ponomarev 17.07.2022
  */
@@ -23,16 +25,17 @@ public class Analytic {
     private Long id;
     @OneToOne(targetEntity = Group.class)
     private Group group;
-    @OneToMany(targetEntity = User.class,fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = User.class,fetch = FetchType.EAGER)
     @ToString.Exclude
     private Set<User> exitUsers;
-    @OneToMany(targetEntity = User.class,fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = User.class,fetch = FetchType.EAGER)
     @ToString.Exclude
     private Set<User> joinedUsers;
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @CreatedDate
-    private Date date = new Date();
+    @Temporal(TIMESTAMP)
+    private Date date;
 
     public Analytic(Group group, Set<User> exitUsers, Set<User> joinedUsers) {
         this.group = group;
