@@ -4,6 +4,8 @@ import com.doubledice.databuilder.bean.BeanBuilder;
 import com.doubledice.databuilder.model.Analytic;
 import com.doubledice.databuilder.model.Group;
 import com.doubledice.databuilder.model.User;
+import com.vk.api.sdk.client.VkApiClient;
+import com.vk.api.sdk.client.actors.ServiceActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
 import lombok.RequiredArgsConstructor;
@@ -31,14 +33,16 @@ public class VkService {
     private final AnalyticService analyticService;
     @Autowired
     private final GroupService groupService;
-//@Autowired @Lazy
-//    VkApiClient vkApiClient;
-//    @Autowired @Lazy
+    @Autowired
+    @Lazy
+    VkApiClient vkApiClient;
+    //    @Autowired @Lazy
 //    UserActor userActor;
 //    @Autowired @Lazy
 //    GroupActor groupActor;
-//@Autowired @Lazy
-//ServiceActor serviceActor;
+    @Autowired
+    @Lazy
+    ServiceActor serviceActor;
 
     /**
      * @param vkLink - ссылка на сообщество вк
@@ -50,23 +54,23 @@ public class VkService {
     //todo wrap into tread pull executor
 //    @Transactional
     public Set<User> getUsersByGroupLink(String vkLink, Group group) throws ClientException, ApiException {
-        Integer id = beanBuilder.getVk().utils().resolveScreenName(beanBuilder.getServiceActor(), vkLink).execute().getObjectId();
+        Integer id = vkApiClient.utils().resolveScreenName(serviceActor, vkLink).execute().getObjectId();
         try {
             Thread.sleep(500);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
         Set<User> groupUsers = new HashSet<>();
-        int groupSize = beanBuilder.getVk().groups().getMembers(beanBuilder.getServiceActor()).groupId(id.toString()).execute().getCount();
+        int groupSize = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).execute().getCount();
         for (int i = 0; i < groupSize; i += 1000) {
 //            List<User> currentUsers = userService.findAll();
-            List<Integer> userIds = beanBuilder.getVk().groups().getMembers(beanBuilder.getServiceActor()).groupId(id.toString()).offset(i).execute().getItems();
+            List<Integer> userIds = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).offset(i).execute().getItems();
             try {
                 Thread.sleep(500);
             } catch (InterruptedException e) {
                 e.printStackTrace();
             }
-            beanBuilder.getVk().users().get(beanBuilder.getServiceActor()).userIds(String.valueOf(userIds)).execute().stream().forEach(s -> {
+            vkApiClient.users().get(serviceActor).userIds(String.valueOf(userIds)).execute().stream().forEach(s -> {
                 //todo extract this into users list
                 User user = userService.findByVkLink(s.getId().toString());
                 if (user == null) {
@@ -89,11 +93,11 @@ public class VkService {
      * @throws ApiException
      */
     public String getGroupNameByVKLink(String vkLink) throws ClientException, ApiException {
-        Integer id = beanBuilder.getVk().utils().resolveScreenName(beanBuilder.getServiceActor(), vkLink).execute().getObjectId();
-        return beanBuilder.getVk().groups().getByIdObjectLegacy(beanBuilder.getServiceActor()).groupId(id.toString()).execute().get(0).getName();
+        Integer id = vkApiClient.utils().resolveScreenName(serviceActor, vkLink).execute().getObjectId();
+        return vkApiClient.groups().getByIdObjectLegacy(serviceActor).groupId(id.toString()).execute().get(0).getName();
     }
 
-//    @Transactional
+    //    @Transactional
     public void scanExistingGroup(Group group, String vkLink) throws ClientException, ApiException {
         Set<User> dataGroupUserList = group.getVkUsers();
         Set<User> currentGroupUserList = getUsersByGroupLink(vkLink, group);
