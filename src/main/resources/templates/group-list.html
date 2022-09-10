@@ -27,6 +27,7 @@
                 <th>Ссылка на группу вк</th>
                 <th>Список пользователей</th>
                 <th>Дополнительная информация</th>
+                <th>Количество пользователей</th>
             </tr>
             </thead>
             <tbody>
@@ -44,6 +45,7 @@
                 </select>
                 </td>
                 <td th:text="${group.additionalInformation}"></td>
+                <td th:text="${group.getVkUsers().size()}+' уч.'"></td>
                 <td><a th:href="@{/group/edit/{id}(id=${group.id})}">Edit</a></td>
                 <td><a th:href="@{/group/group-delete/{id}(id=${group.id})}">Delete</a></td>
             </tr>
