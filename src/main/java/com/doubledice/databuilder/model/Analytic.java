@@ -3,6 +3,7 @@ package com.doubledice.databuilder.model;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 import org.springframework.data.annotation.CreatedDate;
+import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
 import java.util.Date;
@@ -26,6 +27,7 @@ public class Analytic {
     @OneToMany(targetEntity = User.class,fetch = FetchType.EAGER, mappedBy = "id")
     private Set<User> joinedUsers;
 
+    @DateTimeFormat(pattern = "yyyy-MM-dd")
     @CreatedDate
     private Date date = new Date();
 

@@ -87,6 +87,7 @@ public class UserController {
             user.setId(id);
             return "user-update";
         }
+        user.setGroups(userService.findUser(id).getGroups());
         userService.addUser(user);
 //        userService.addUser(objectMapper.convertValue(user, User.class));
         return "redirect:/users/user-list";

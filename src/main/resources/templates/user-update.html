@@ -3,6 +3,8 @@
 <head>
     <meta charset="UTF-8">
     <title>Update User</title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <link type="text/css" rel="stylesheet" th:href="@{css/bootstrap.min.css}" />
 </head>
 <body>
 <form action="#"
@@ -80,9 +82,16 @@
     <input type="checkbox" th:field="*{wasContacted}" id="wasContacted" placeholder="был ли контакт">
     <span th:if="${#fields.hasErrors('wasContacted')}" th:errors="*{wasContacted}"></span>
     </br>
-    <label for="groups">список групп</label>
-    <input type="text" th:field="*{groups}" id="groups" placeholder="список групп">
-    <span th:if="${#fields.hasErrors('groups')}" th:errors="*{groups}"></span>
+<!--    <label for="groups">список групп</label>-->
+<!--    <input readonly type="hidden" th:field="*{groups}" id="groups" placeholder="ID">-->
+<!--    <input type="text" th:field="*{name}" />-->
+<!--    <select>-->
+<!--				<span th:each="group,rowStat : *{groups}">-->
+<!--					<option><span th:text="${group.groupName}"/><th:block-->
+<!--                            th:if="${!iterStat.last}">,</th:block></option></span>-->
+<!--    </select>-->
+<!--    <span th:if="${#fields.hasErrors('groups')}" th:errors="*{groups}"></span>-->
+
     </br>
     <input type="submit" value="Update User">
 </form>
