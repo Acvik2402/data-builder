@@ -34,8 +34,7 @@ public class Analytic {
 
     @DateTimeFormat(pattern = "yyyy-MM-dd")
     @CreatedDate
-    @Temporal(TIMESTAMP)
-    private Date date;
+    private Date date=new Date();
 
     public Analytic(Group group, Set<User> exitUsers, Set<User> joinedUsers) {
         this.group = group;
