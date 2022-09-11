@@ -8,6 +8,7 @@ import lombok.ToString;
 import org.hibernate.Hibernate;
 
 import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.Set;
 
@@ -23,7 +24,8 @@ public class Group {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    private String groupName = null;
+    private String groupName;
+    @NotNull
     @Column(name = "vk_link", unique = true)
     private String vkLink;
     @Required(value = false)
