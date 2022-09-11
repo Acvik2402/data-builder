@@ -57,17 +57,18 @@ public class VkService {
         }
         Set<User> groupUsers = Collections.synchronizedSet(new HashSet<>());
         int groupSize = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).execute().getCount();
-        for (int i = 0; i < groupSize; i += 1000) {
-            List<Integer> userIds = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).offset(i).execute().getItems();
-            try {
-                Thread.sleep(500);
-            } catch (InterruptedException e) {
-                Thread.currentThread().interrupt();
-            }
-            synchronized (this) {
+        synchronized (VkApiClient.class) {
+//        List<User> allCurrentUsers = userService.findAll();
+            for (int i = 0; i < groupSize; i += 100) {
+                List<Integer> userIds = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).count(100).offset(i).execute().getItems();
+                try {
+                    Thread.sleep(500);
+                } catch (InterruptedException e) {
+                    Thread.currentThread().interrupt();
+                }
                 vkApiClient.users().get(serviceActor).userIds(String.valueOf(userIds)).execute().forEach(s -> {
-                    //todo extract this into users list
                     User user = userService.findByVkLink(s.getId().toString());
+//                    User user = findUserByVkLink(s.getId().toString(), allCurrentUsers);
                     if (user == null) {
                         user = new User();
                     }
@@ -81,6 +82,12 @@ public class VkService {
         }
         return groupUsers;
     }
+
+//    private User findUserByVkLink(String vkLink, List<User> allCurrentUsers) {
+//        return allCurrentUsers.stream().filter(s -> s.getVkLink().equals(vkLink))
+//                .findFirst()
+//                .orElse(null);
+//    }
 
     /**
      * @param vkLink

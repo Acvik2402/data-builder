@@ -7,12 +7,10 @@ import com.vk.api.sdk.client.actors.ServiceActor;
 import com.vk.api.sdk.client.actors.UserActor;
 import com.vk.api.sdk.exceptions.ApiException;
 import com.vk.api.sdk.exceptions.ClientException;
-import com.vk.api.sdk.exceptions.OAuthException;
 import com.vk.api.sdk.httpclient.HttpTransportClient;
 import com.vk.api.sdk.objects.GroupAuthResponse;
 import com.vk.api.sdk.objects.ServiceClientCredentialsFlowResponse;
 import com.vk.api.sdk.objects.UserAuthResponse;
-import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Lazy;
@@ -41,19 +39,26 @@ public class BeanBuilder {
         this.code = code;
     }
 
-    @Autowired @Lazy
+    @Autowired
+    @Lazy
     private Environment env;
-    @Autowired @Lazy
+    @Autowired
+    @Lazy
     private VkApiClient vk;
-    @Autowired @Lazy
+    @Autowired
+    @Lazy
     private GroupAuthResponse groupAuthResponse;
-    @Autowired @Lazy
+    @Autowired
+    @Lazy
     private UserAuthResponse userAuthResponse;
-    @Autowired @Lazy
+    @Autowired
+    @Lazy
     private GroupActor groupActor;
-    @Autowired @Lazy
+    @Autowired
+    @Lazy
     private UserActor userActor;
-    @Autowired @Lazy
+    @Autowired
+    @Lazy
     private ServiceActor serviceActor;
 
     public VkApiClient getVk() {
@@ -81,14 +86,14 @@ public class BeanBuilder {
     }
 
     @Bean
-    @Scope("singleton")
+//    @Scope("singleton")
     public VkApiClient vkApiClient() {
         TransportClient transportClient = new HttpTransportClient();
         return new VkApiClient(transportClient);
     }
 
     /**
-     *  clientSecret - защищенный ключ
+     * clientSecret - защищенный ключ
      *
      * @return
      * @throws ApiException
@@ -108,11 +113,12 @@ public class BeanBuilder {
                     .execute();
         } catch (ApiException | ClientException e) {
             throw e;
-        }catch (Exception e) {
-             e.printStackTrace();
+        } catch (Exception e) {
+            e.printStackTrace();
         }
         return authResp;
     }
+
     @Lazy
     @Bean
     @Scope("prototype")
@@ -150,13 +156,13 @@ public class BeanBuilder {
                     .execute();
         } catch (ApiException | ClientException e) {
             throw e;
-        }catch (Exception e) {
+        } catch (Exception e) {
             e.printStackTrace();
         }
         return authResp;
     }
 
-//        @Lazy
+    //        @Lazy
     @Bean
     @Scope("prototype")
 //    @Scope("singleton")
@@ -164,21 +170,21 @@ public class BeanBuilder {
         return new UserActor(userAuthResponse.getUserId(), userAuthResponse.getAccessToken());
     }
 
-//    @Lazy
+    //    @Lazy
     @Bean
     @Scope("singleton")
     public ServiceActor serviceActor() {
         ServiceClientCredentialsFlowResponse authResp = null;
-        try {
-            authResp = vk.oAuth()
-                    .serviceClientCredentialsFlow(Integer.valueOf(Objects.requireNonNull(env.getProperty(CLIENT_ID))),
-                            env.getProperty(CLIENT_SECRET))
-                    .execute();
-        } catch (OAuthException e) {
-            e.getRedirectUri();
-        } catch (ClientException | ApiException e) {
-            throw new RuntimeException(e);
-        }
+//        try {
+//            authResp = vk.oAuth()
+//                    .serviceClientCredentialsFlow(Integer.valueOf(Objects.requireNonNull(env.getProperty(CLIENT_ID))),
+//                            env.getProperty(CLIENT_SECRET))
+//                    .execute();
+//        } catch (OAuthException e) {
+//            e.getRedirectUri();
+//        } catch (ClientException | ApiException e) {
+//            throw new RuntimeException(e);
+//        }
 //        return new ServiceActor(Integer.valueOf(Objects.requireNonNull(env.getProperty(CLIENT_ID))),
 //                Objects.requireNonNull(authResp).getAccessToken());
         return new ServiceActor(Integer.valueOf(Objects.requireNonNull(env.getProperty(CLIENT_ID))),
