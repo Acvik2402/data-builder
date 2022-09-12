@@ -86,7 +86,7 @@ public class BeanBuilder {
     }
 
     @Bean
-//    @Scope("singleton")
+    @Scope("singleton")
     public VkApiClient vkApiClient() {
         TransportClient transportClient = new HttpTransportClient();
         return new VkApiClient(transportClient);

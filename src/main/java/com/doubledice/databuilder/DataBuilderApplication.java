@@ -12,9 +12,7 @@ import java.io.IOException;
 public class DataBuilderApplication {
 
     public static void main(String[] args) throws IOException {
-        SpringApplication app = new SpringApplication(DataBuilderApplication.class);
-//        app.setLazyInitialization(true);
-        app.run(args);
+        SpringApplication.run(DataBuilderApplication.class, args);
         openHomePage();
     }
 

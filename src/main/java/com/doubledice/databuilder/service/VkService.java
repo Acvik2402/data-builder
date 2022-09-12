@@ -14,10 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.util.Collections;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
+import java.util.*;
 
 /**
  * @author ponomarev 16.08.2022
@@ -49,16 +46,16 @@ public class VkService {
      * @throws ApiException
      */
     public Set<User> getUsersByGroupLink(String vkLink, Group group) throws ClientException, ApiException {
-        Integer id = vkApiClient.utils().resolveScreenName(serviceActor, vkLink).execute().getObjectId();
-        try {
-            Thread.sleep(500);
-        } catch (InterruptedException e) {
-            Thread.currentThread().interrupt();
-        }
         Set<User> groupUsers = Collections.synchronizedSet(new HashSet<>());
-        int groupSize = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).execute().getCount();
         synchronized (VkApiClient.class) {
-//        List<User> allCurrentUsers = userService.findAll();
+            Integer id = vkApiClient.utils().resolveScreenName(serviceActor, vkLink).execute().getObjectId();
+            try {
+                Thread.sleep(500);
+            } catch (InterruptedException e) {
+                Thread.currentThread().interrupt();
+            }
+            int groupSize = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).execute().getCount();
+
             for (int i = 0; i < groupSize; i += 100) {
                 List<Integer> userIds = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).count(100).offset(i).execute().getItems();
                 try {
@@ -68,7 +65,6 @@ public class VkService {
                 }
                 vkApiClient.users().get(serviceActor).userIds(String.valueOf(userIds)).execute().forEach(s -> {
                     User user = userService.findByVkLink(s.getId().toString());
-//                    User user = findUserByVkLink(s.getId().toString(), allCurrentUsers);
                     if (user == null) {
                         user = new User();
                     }
@@ -83,12 +79,6 @@ public class VkService {
         return groupUsers;
     }
 
-//    private User findUserByVkLink(String vkLink, List<User> allCurrentUsers) {
-//        return allCurrentUsers.stream().filter(s -> s.getVkLink().equals(vkLink))
-//                .findFirst()
-//                .orElse(null);
-//    }
-
     /**
      * @param vkLink
      * @return название сообщества
@@ -101,17 +91,17 @@ public class VkService {
     }
 
     public void scanExistingGroup(Group group, String vkLink) throws ClientException, ApiException {
-        Set<User> dataGroupUserList = new HashSet<>(group.getVkUsers());
-        Set<User> currentGroupUserList = new HashSet<>(getUsersByGroupLink(vkLink, group));
-        Set<User> exitUsers = (Set<User>) ((HashSet<User>) dataGroupUserList).clone();
+        List<User> dataGroupUserList = Collections.synchronizedList(new ArrayList<>(group.getVkUsers()));
+        List<User> currentGroupUserList = Collections.synchronizedList(new ArrayList<>(getUsersByGroupLink(vkLink, group)));
+        List<User> exitUsers = Collections.synchronizedList(new ArrayList<>(dataGroupUserList));
         exitUsers.removeAll(currentGroupUserList);
-        Set<User> joinedUsers = (Set<User>) ((HashSet<User>) currentGroupUserList).clone();
+        List<User> joinedUsers = Collections.synchronizedList(new ArrayList<>(currentGroupUserList));
         joinedUsers.removeAll(dataGroupUserList);
         if (!CollectionUtils.isEmpty(exitUsers) || !CollectionUtils.isEmpty(joinedUsers)) {
-            Analytic analytic = new Analytic(group, exitUsers, joinedUsers);
+            Analytic analytic = new Analytic(group, new HashSet<>(exitUsers), new HashSet<>(joinedUsers));
             analyticService.addAnalytic(analytic);
         }
-        group.setVkUsers(currentGroupUserList);
+        group.setVkUsers(new HashSet<>(currentGroupUserList));
         groupService.addGroup(group);
     }
 }

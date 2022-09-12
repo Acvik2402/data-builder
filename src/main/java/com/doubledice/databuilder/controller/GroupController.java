@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
+import java.util.concurrent.CompletableFuture;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -100,20 +101,29 @@ public class GroupController {
         vkLink = checkVkLink(vkLink);
         Group group = groupService.findGroupByLink(vkLink);
         try {
+            String finalVkLink = vkLink;
             if (group != null) {
-                vkService.scanExistingGroup(group, vkLink);
+                Group finalGroup = group;
+                CompletableFuture.runAsync(() -> {
+                    try {
+                        vkService.scanExistingGroup(finalGroup, finalVkLink);
+                    } catch (ClientException | ApiException e) {
+                        e.printStackTrace();
+                    }
+                });
             } else {
                 group = new Group(vkLink, new HashSet<>());
                 group.setGroupName(vkService.getGroupNameByVKLink(vkLink));
                 group.setVkLink(vkLink);
-                //todo saving into DB 3 times, should fix it
-                group = groupService.addGroup(group);
-                try {
-                    group.setVkUsers(vkService.getUsersByGroupLink(vkLink, group));
-                } catch (ApiAccessException e) {
-                    group.setAdditionalInformation(e.getMessage());
-                }
                 groupService.addGroup(group);
+                Group finalGroup = group;
+                CompletableFuture.runAsync(() -> {
+                    try {
+                        addGroupUsers(finalVkLink, finalGroup);
+                    } catch (ClientException | ApiException e) {
+                        e.printStackTrace();
+                    }
+                });
             }
             return "redirect:/group/groups";
         } catch (ApiException | ClientException e) {
@@ -127,7 +137,17 @@ public class GroupController {
 //    }
     }
 
+    private void addGroupUsers(String vkLink, Group group) throws ClientException, ApiException {
+        try {
+            group.setVkUsers(vkService.getUsersByGroupLink(vkLink, group));
+        } catch (ApiAccessException e) {
+            group.setAdditionalInformation(e.getMessage());
+        }
+        groupService.addGroup(group);
+    }
+
     private String checkVkLink(String vkLink) {
+        vkLink=vkLink.trim();
         String pattern = "(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})";
         Pattern regex = Pattern.compile("(?<=\\.\\D{3}\\/)(\\w+)\\/?");
         Matcher matcher =  regex.matcher(vkLink);
