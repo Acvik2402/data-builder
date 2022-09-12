@@ -5,6 +5,8 @@ import com.doubledice.databuilder.model.Group;
 import com.doubledice.databuilder.repository.AnalyticRepository;
 import com.doubledice.databuilder.repository.GroupRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.scheduling.annotation.Async;
+import org.springframework.scheduling.annotation.EnableAsync;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 
@@ -17,7 +19,8 @@ import java.util.concurrent.TimeUnit;
  */
 @Component
 @RequiredArgsConstructor
-public class ScheduledTasks implements Runnable {
+@EnableAsync
+public class ScheduledTasks {
     public static final int ANALYTIC_LIFE_CYCLE = 30;
     private final GroupRepository groupRepository;
     private final AnalyticRepository analyticRepository;
@@ -27,8 +30,8 @@ public class ScheduledTasks implements Runnable {
      * удаление старых элементов analytic раз в день создание новых
      */
     @Scheduled(fixedRate = 86400000)
-    @Override
-    public void run() {
+    @Async
+    public void start() {
         List<Group> groupList = groupRepository.findAll();
         for (Group group : groupList) {
             try {
@@ -37,7 +40,10 @@ public class ScheduledTasks implements Runnable {
                 e.printStackTrace();
             }
         }
-
+    }
+    @Scheduled(fixedRate = 86400000)
+    @Async
+    public void clearAnalyticOldData() {
         List<Analytic> analyticList = analyticRepository.findAll();
         analyticList.stream().filter(s -> getDateDiff(s.getDate(), new Date(), TimeUnit.DAYS) > ANALYTIC_LIFE_CYCLE).forEach(analyticRepository::delete);
     }
