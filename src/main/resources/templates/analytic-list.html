@@ -31,7 +31,6 @@
             <tbody>
             <tr th:each="analytic:${analytics}">
                 <td th:text="${analytic.group.groupName}"></td>
-<!--                <td th:text="${analytic.date}"></td>-->
                 <td th:text="${#dates.format(analytic.date, 'dd-MMM-yyyy')}"></td>
                 <td>
                     <select>
@@ -53,8 +52,7 @@
 				        </span>
                     </select>
                 </td>
-                <!--                <td><a th:href="@{/edit/{id}(id=${group.id})}">Edit</a></td>-->
-                <!--                <td><a th:href="@{group-delete/{id}(id=${group.id})}">Delete</a></td>-->
+                <td><a th:href="@{/analytic/analytic-delete/{id}(id=${analytic.id})}">Delete</a></td>
             </tr>
             </tbody>
         </table>

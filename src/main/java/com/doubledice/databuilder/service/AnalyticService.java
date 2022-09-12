@@ -12,4 +12,6 @@ public interface AnalyticService {
     Analytic addAnalytic(Analytic analytic);
 
     List<Analytic> findAll();
+
+    void deleteById(Long id);
 }

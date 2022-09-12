@@ -20,6 +20,7 @@ public class AnalyticServiceImpl implements AnalyticService {
     private final AnalyticRepository analyticRepository;
 
     @Override
+    @Transactional
     public Analytic addAnalytic(Analytic analytic) {
         return analyticRepository.save(analytic);
     }
@@ -27,5 +28,11 @@ public class AnalyticServiceImpl implements AnalyticService {
     @Override
     public List<Analytic> findAll() {
         return analyticRepository.findAll();
+    }
+
+    @Override
+    @Transactional
+    public void deleteById(Long id) {
+        analyticRepository.deleteById(id);
     }
 }
