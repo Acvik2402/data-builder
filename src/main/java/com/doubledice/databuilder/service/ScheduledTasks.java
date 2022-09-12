@@ -29,7 +29,7 @@ public class ScheduledTasks {
     /**
      * удаление старых элементов analytic раз в день создание новых
      */
-    @Scheduled(fixedRate = 86400000)
+    @Scheduled(cron = "@midnight")
     @Async
     public void start() {
         List<Group> groupList = groupRepository.findAll();
@@ -41,7 +41,8 @@ public class ScheduledTasks {
             }
         }
     }
-    @Scheduled(fixedRate = 86400000)
+
+    @Scheduled(cron = "@daily")
     @Async
     public void clearAnalyticOldData() {
         List<Analytic> analyticList = analyticRepository.findAll();
@@ -50,6 +51,6 @@ public class ScheduledTasks {
 
     public static long getDateDiff(Date date1, Date date2, TimeUnit timeUnit) {
         long diffInMillies = date2.getTime() - date1.getTime();
-        return timeUnit.convert(diffInMillies,TimeUnit.MILLISECONDS);
+        return timeUnit.convert(diffInMillies, TimeUnit.MILLISECONDS);
     }
 }
