@@ -101,12 +101,11 @@ public class GroupController {
         vkLink = checkVkLink(vkLink);
         Group group = groupService.findGroupByLink(vkLink);
         try {
-            String finalVkLink = vkLink;
             if (group != null) {
                 Group finalGroup = group;
                 CompletableFuture.runAsync(() -> {
                     try {
-                        vkService.scanExistingGroup(finalGroup, finalVkLink);
+                        vkService.scanExistingGroup(finalGroup);
                     } catch (Exception e) {
                         e.printStackTrace();
                     }
@@ -139,7 +138,7 @@ public class GroupController {
 
     private void addGroupUsers(Group group) throws ClientException, ApiException {
         try {
-           group.setVkUsers(vkService.getUsersByGroupLink(group));
+           group.setVkUsers(vkService.getUsersByGroup(group));
         } catch (ApiAccessException e) {
             group.setAdditionalInformation(e.getMessage());
         }finally {

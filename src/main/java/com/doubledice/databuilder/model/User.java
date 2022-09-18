@@ -1,12 +1,18 @@
 package com.doubledice.databuilder.model;
 
-import lombok.*;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
+import lombok.ToString;
 import org.apache.commons.collections4.CollectionUtils;
 import org.hibernate.Hibernate;
 import org.springframework.format.annotation.DateTimeFormat;
 
 import javax.persistence.*;
-import java.util.*;
+import java.util.Date;
+import java.util.HashSet;
+import java.util.Objects;
+import java.util.Set;
 
 /**
  * @author ponomarev 30.06.2022
@@ -42,17 +48,25 @@ public class User {
     private String vkLink;
     private String tgLink;
     private Boolean wasContacted;
-    @ManyToMany(fetch = FetchType.EAGER)
+    @ManyToMany(fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @ToString.Exclude
     private Set<Group> groups;
 
     public void setNewGroupIfNotExist(Group group) {
-        if (CollectionUtils.isEmpty(this.groups)) {
-            HashSet<Group> tempSet = new HashSet<>();
-            tempSet.add(group);
-            this.groups = tempSet;
-        } else {
-            this.groups.add(group);
+        if (group != null) {
+            if (CollectionUtils.isEmpty(this.groups)) {
+                HashSet<Group> tempSet = new HashSet<>();
+                tempSet.add(group);
+                this.groups = tempSet;
+            } else {
+                this.groups.add(group);
+            }
+        }
+    }
+
+    public void removeGroup(Group group) {
+        if (group != null && !CollectionUtils.isEmpty(this.groups)) {
+            this.groups.remove(group);
         }
     }
 

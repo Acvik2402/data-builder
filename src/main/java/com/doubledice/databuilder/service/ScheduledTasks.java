@@ -35,7 +35,7 @@ public class ScheduledTasks {
         List<Group> groupList = groupRepository.findAll();
         for (Group group : groupList) {
             try {
-                vkService.scanExistingGroup(group, group.getVkLink());
+                vkService.scanExistingGroup(group);
             } catch (Exception e) {
                 e.printStackTrace();
             }

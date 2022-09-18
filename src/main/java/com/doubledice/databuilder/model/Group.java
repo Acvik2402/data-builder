@@ -30,7 +30,7 @@ public class Group {
     @Column(name = "vk_link", unique = true)
     private String vkLink;
     @Required(value = false)
-    @ManyToMany(mappedBy = "groups", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "groups", fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
     @ToString.Exclude
     private Set<User> vkUsers;
     @Required(value = false)

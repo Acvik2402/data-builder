@@ -25,10 +25,11 @@ public class Analytic {
     private Long id;
     @OneToOne(targetEntity = Group.class)
     private Group group;
-    @ManyToMany(targetEntity = User.class,fetch = FetchType.EAGER)
+    //todo fix it
+    @ManyToMany(targetEntity = User.class,fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @ToString.Exclude
     private Set<User> exitUsers;
-    @ManyToMany(targetEntity = User.class,fetch = FetchType.EAGER)
+    @ManyToMany(targetEntity = User.class,fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
     @ToString.Exclude
     private Set<User> joinedUsers;
 

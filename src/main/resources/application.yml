@@ -11,6 +11,10 @@ spring:
     properties:
       hibernate:
         dialect: org.hibernate.dialect.PostgreSQL95Dialect
+        query:
+          plan_cache_max_size: 512
+          plan_parameter_metadata_max_size: 32
+          in_clause_parameter_padding: true
     defer-datasource-initialization: true
   datasource:
     url: ${DB_URL}?createDatabaseIfNotExist=true

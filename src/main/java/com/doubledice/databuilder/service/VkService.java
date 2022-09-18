@@ -62,7 +62,7 @@ public class VkService {
      * @throws ClientException
      * @throws ApiException
      */
-    public Set<User> getUsersByGroupLink(Group group) throws ClientException, ApiException {
+    public Set<User> getUsersByGroup(Group group) throws ClientException, ApiException {
         synchronized (VkApiClient.class) {
             Set<User> groupUsers = new HashSet<>();
             Integer id = vkApiClient.utils().resolveScreenName(serviceActor, group.getVkLink()).execute().getObjectId();
@@ -87,25 +87,40 @@ public class VkService {
         }
     }
 
-    public void scanExistingGroup(Group group, String vkLink) throws ClientException, ApiException {
+    public void scanExistingGroup(Group group) throws ClientException, ApiException {
         List<String> dataGroupUserIdList = new ArrayList<>(group.getVkUsersIdLinks());
-        List<String> currentGroupUserIdList = new ArrayList<>(getUsersIdLinksByGroupLink(vkLink));
+        List<String> currentGroupUserIdList = new ArrayList<>(getUsersIdLinksByGroupLink(group.getVkLink()));
         List<String> exitUsersId = new ArrayList<>(dataGroupUserIdList);
         exitUsersId.removeAll(currentGroupUserIdList);
         List<String> joinedUsersId = new ArrayList<>(currentGroupUserIdList);
         joinedUsersId.removeAll(dataGroupUserIdList);
         synchronized (this) {
             if (!CollectionUtils.isEmpty(exitUsersId) || !CollectionUtils.isEmpty(joinedUsersId)) {
-                Analytic analytic = new Analytic(group, getUsersByVkId(exitUsersId, group), getUsersByVkId(joinedUsersId, group));
+                Set<User> exitUsers = getUsersByVkId(exitUsersId, null);
+                Set<User> joinedUsers = getUsersByVkId(joinedUsersId, group);
+                Analytic analytic = new Analytic(group, exitUsers, joinedUsers);
                 analyticService.addAnalytic(analytic);
-                group.setVkUsers(getUsersByVkId(currentGroupUserIdList, group));
-                groupService.addGroup(group);
+                if (!CollectionUtils.isEmpty(exitUsersId)) {
+                    updateUsersInfo(exitUsers, group, true);
+                }
             }
         }
-        dataGroupUserIdList.clear();
-        currentGroupUserIdList.clear();
-        exitUsersId.clear();
-        joinedUsersId.clear();
+    }
+
+    /**
+     * обновляем информацию в БД об участниках группы, если true - то удаляем
+     *
+     * @param users  участники, которые пришли или ушли
+     * @param group
+     * @param remove удалять или добавлять участников, если true - то удаляем
+     */
+    private synchronized void updateUsersInfo(Set<User> users, Group group, boolean remove) {
+        if (remove) {
+            users.forEach(s -> {
+                s.removeGroup(group);
+                userService.addUser(s);
+            });
+        }
     }
 
     private Set<String> getUsersIdLinksByGroupLink(String vkLink) throws ClientException, ApiException {
