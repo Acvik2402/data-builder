@@ -11,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author ponomarev 16.07.2022
@@ -66,5 +67,9 @@ public class Group {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public Set<Integer> getVkUsersIdLinks() {
+        return this.getVkUsers().stream().map(user -> Integer.valueOf(user.getVkLink())).collect(Collectors.toSet());
     }
 }
