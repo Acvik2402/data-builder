@@ -69,7 +69,7 @@ public class Group {
         return getClass().hashCode();
     }
 
-    public Set<Integer> getVkUsersIdLinks() {
-        return this.getVkUsers().stream().map(user -> Integer.valueOf(user.getVkLink())).collect(Collectors.toSet());
+    public Set<String> getVkUsersIdLinks() {
+        return this.getVkUsers().stream().map(User::getVkLink).collect(Collectors.toSet());
     }
 }

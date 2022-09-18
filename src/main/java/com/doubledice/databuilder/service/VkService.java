@@ -88,11 +88,11 @@ public class VkService {
     }
 
     public void scanExistingGroup(Group group, String vkLink) throws ClientException, ApiException {
-        List<Integer> dataGroupUserIdList = new ArrayList<>(group.getVkUsersIdLinks());
-        List<Integer> currentGroupUserIdList = new ArrayList<>(getUsersIdLinksByGroupLink(vkLink));
-        List<Integer> exitUsersId = new ArrayList<>(dataGroupUserIdList);
+        List<String> dataGroupUserIdList = new ArrayList<>(group.getVkUsersIdLinks());
+        List<String> currentGroupUserIdList = new ArrayList<>(getUsersIdLinksByGroupLink(vkLink));
+        List<String> exitUsersId = new ArrayList<>(dataGroupUserIdList);
         exitUsersId.removeAll(currentGroupUserIdList);
-        List<Integer> joinedUsersId = new ArrayList<>(currentGroupUserIdList);
+        List<String> joinedUsersId = new ArrayList<>(currentGroupUserIdList);
         joinedUsersId.removeAll(dataGroupUserIdList);
         synchronized (this) {
             if (!CollectionUtils.isEmpty(exitUsersId) || !CollectionUtils.isEmpty(joinedUsersId)) {
@@ -108,9 +108,9 @@ public class VkService {
         joinedUsersId.clear();
     }
 
-    private Set<Integer> getUsersIdLinksByGroupLink(String vkLink) throws ClientException, ApiException {
+    private Set<String> getUsersIdLinksByGroupLink(String vkLink) throws ClientException, ApiException {
         synchronized (VkApiClient.class) {
-            Set<Integer> groupUsersLinks = new HashSet<>();
+            Set<String> groupUsersLinks = new HashSet<>();
             Integer id = vkApiClient.utils().resolveScreenName(serviceActor, vkLink).execute().getObjectId();
             try {
                 Thread.sleep(500);
@@ -120,7 +120,7 @@ public class VkService {
             int groupSize = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).execute().getCount();
 
             for (int i = 0; i <= groupSize; i += ITERATION_SIZE) {
-                groupUsersLinks.addAll(vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).count(ITERATION_SIZE).offset(i).execute().getItems());
+                groupUsersLinks.addAll(vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).count(ITERATION_SIZE).offset(i).execute().getItems().stream().map(String::valueOf).collect(Collectors.toList()));
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
@@ -131,11 +131,11 @@ public class VkService {
         }
     }
 
-    private Set<User> getUsersByVkId(List<Integer> userIds, Group group) throws ClientException, ApiException {
+    private Set<User> getUsersByVkId(List<String> userIds, Group group) throws ClientException, ApiException {
         synchronized (VkApiClient.class) {
             Set<User> groupUsers = new HashSet<>();
 //            List <String> stringIdList = userIds.stream().map(String::valueOf).collect(Collectors.toList());
-            for (List<String> iterSublist : ListUtils.partition(userIds.stream().map(String::valueOf).collect(Collectors.toList()), ITERATION_SIZE)) {
+            for (List<String> iterSublist : ListUtils.partition(userIds, ITERATION_SIZE)) {
                 vkApiClient.users().get(serviceActor).userIds(iterSublist).lang(Lang.RU).execute().forEach(s -> {
                     User user = userService.findByVkLink(s.getId().toString());
                     if (user == null) {
