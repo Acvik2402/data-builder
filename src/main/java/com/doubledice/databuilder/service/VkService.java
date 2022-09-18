@@ -15,6 +15,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author ponomarev 16.08.2022
@@ -57,13 +58,13 @@ public class VkService {
             int groupSize = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).execute().getCount();
 
             for (int i = 0; i < groupSize; i += 100) {
-                List<Integer> userIds = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).count(100).offset(i).execute().getItems();
+                List<String> userIds = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).count(100).offset(i).execute().getItems().stream().map(String::valueOf).collect(Collectors.toList());
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
                     Thread.currentThread().interrupt();
                 }
-                vkApiClient.users().get(serviceActor).userIds(String.valueOf(userIds)).execute().forEach(s -> {
+                vkApiClient.users().get(serviceActor).userIds(userIds).execute().forEach(s -> {
                     User user = userService.findByVkLink(s.getId().toString());
                     if (user == null) {
                         user = new User();
