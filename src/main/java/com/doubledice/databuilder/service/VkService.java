@@ -74,7 +74,7 @@ public class VkService {
             int groupSize = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).execute().getCount();
 
             for (int i = 0; i <= groupSize; i += ITERATION_SIZE) {
-                List<Integer> userIds = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).count(ITERATION_SIZE).offset(i).execute().getItems();
+                List<String> userIds = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).count(ITERATION_SIZE).offset(i).execute().getItems().stream().map(String::valueOf).collect(Collectors.toList());
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
@@ -134,7 +134,6 @@ public class VkService {
     private Set<User> getUsersByVkId(List<String> userIds, Group group) throws ClientException, ApiException {
         synchronized (VkApiClient.class) {
             Set<User> groupUsers = new HashSet<>();
-//            List <String> stringIdList = userIds.stream().map(String::valueOf).collect(Collectors.toList());
             for (List<String> iterSublist : ListUtils.partition(userIds, ITERATION_SIZE)) {
                 vkApiClient.users().get(serviceActor).userIds(iterSublist).lang(Lang.RU).execute().forEach(s -> {
                     User user = userService.findByVkLink(s.getId().toString());
