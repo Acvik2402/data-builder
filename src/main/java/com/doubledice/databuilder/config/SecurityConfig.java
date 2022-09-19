@@ -35,7 +35,6 @@ public class SecurityConfig extends WebSecurityConfigurerAdapter {
         ).formLogin().and().logout().logoutSuccessUrl("/");
     }
 
-    //todo move default users into DB
     //in memory
     @Bean
     public UserDetailsService users() {
