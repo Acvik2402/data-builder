@@ -17,6 +17,7 @@ import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @author ponomarev 16.08.2022
@@ -77,7 +78,6 @@ public class VkService {
                     Thread.currentThread().interrupt();
                 }
                 groupUsers.addAll(getUsersByVkId(userIds, group));
-//                userIds.clear();
             }
             return groupUsers;
         }
