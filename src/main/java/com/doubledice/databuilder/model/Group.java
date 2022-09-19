@@ -11,6 +11,7 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.util.Objects;
 import java.util.Set;
+import java.util.stream.Collectors;
 
 /**
  * @author ponomarev 16.07.2022
@@ -29,7 +30,7 @@ public class Group {
     @Column(name = "vk_link", unique = true)
     private String vkLink;
     @Required(value = false)
-    @ManyToMany(mappedBy = "groups", fetch = FetchType.EAGER, cascade = CascadeType.REMOVE)
+    @ManyToMany(mappedBy = "groups", fetch = FetchType.EAGER, cascade = {CascadeType.REMOVE, CascadeType.REFRESH})
     @ToString.Exclude
     private Set<User> vkUsers;
     @Required(value = false)
@@ -66,5 +67,9 @@ public class Group {
     @Override
     public int hashCode() {
         return getClass().hashCode();
+    }
+
+    public Set<String> getVkUsersIdLinks() {
+        return this.getVkUsers().stream().map(User::getVkLink).collect(Collectors.toSet());
     }
 }
