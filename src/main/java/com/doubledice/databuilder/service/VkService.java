@@ -16,11 +16,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.stereotype.Service;
 
-import java.util.ArrayList;
-import java.util.HashSet;
-import java.util.List;
-import java.util.Set;
-import java.util.stream.Collectors;
+import java.util.*;
 
 /**
  * @author ponomarev 16.08.2022
@@ -136,6 +132,7 @@ public class VkService {
 
             for (int i = 0; i <= groupSize; i += ITERATION_SIZE) {
                 groupUsersLinks.addAll(vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).count(ITERATION_SIZE).offset(i).execute().getItems().stream().map(String::valueOf).collect(Collectors.toList()));
+
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
@@ -151,6 +148,7 @@ public class VkService {
             Set<User> groupUsers = new HashSet<>();
             for (List<String> iterSublist : ListUtils.partition(userIds, ITERATION_SIZE)) {
                 vkApiClient.users().get(serviceActor).userIds(iterSublist).lang(Lang.RU).execute().forEach(s -> {
+
                     User user = userService.findByVkLink(s.getId().toString());
                     if (user == null) {
                         user = new User();
