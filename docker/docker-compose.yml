@@ -1,0 +1,17 @@
+version: '3.3'
+
+volumes:
+  pg_service:
+
+services:
+  pg_db:
+    container_name: pg_database
+    image: postgres:12.8-alpine
+    environment:
+      - POSTGRES_DB=double-dice-data
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=123
+    volumes:
+      - pg_service:/var/lib/postgresql/data
+    ports:
+      - "1232:5432"

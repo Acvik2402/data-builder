@@ -39,7 +39,7 @@ spring:
             defaultUserName: "user"
             defaultUserPass: "1212121"
             defaultAdminName: "admin"
-            defaultAdminPass: "12121212"
+            defaultAdminPass: "1212212"
             scope:
               - manage
             redirect-uri: "http://localhost/vk/code"
