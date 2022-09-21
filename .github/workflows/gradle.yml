@@ -28,6 +28,6 @@ jobs:
       with:
         java-version: '1.8'
     - name: Build with Gradle
-      uses: ./gradlew build
+      uses: ./gradlew clean build
       with:
         arguments: build
