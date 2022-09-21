@@ -17,9 +17,9 @@ spring:
           in_clause_parameter_padding: true
     defer-datasource-initialization: true
   datasource:
-    url: ${DB_URL}?createDatabaseIfNotExist=true
-    username: ${DB_USERNAME}
-    password: ${DB_PASS}
+    url: jdbc:postgresql://localhost:5432/double-dice-data?createDatabaseIfNotExist=true
+    username: postgres
+    password: 123
     driverClassName: org.postgresql.Driver
   sql:
     init:
