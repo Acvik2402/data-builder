@@ -23,7 +23,7 @@
     <span th:if="${#fields.hasErrors('vkLink')}" th:errors="*{vkLink}"></span>
     </br>
     <label for="vkUsers">Список пользователей</label>
-    <input type="text" th:field="*{vkUsers}" id="vkUsers" placeholder="Список пользователей">
+    <input readonly type="text" th:field="*{vkUsers}" id="vkUsers" placeholder="Список пользователей">
     <span th:if="${#fields.hasErrors('vkUsers')}" th:errors="*{vkUsers}"></span>
     </br>
     <label for="additionalInformation">Дополнительная информация</label>
