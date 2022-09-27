@@ -19,8 +19,8 @@ import javax.validation.Valid;
 import java.util.HashSet;
 import java.util.List;
 import java.util.concurrent.CompletableFuture;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
+
+import static com.doubledice.databuilder.service.VkService.checkVkLink;
 
 /**
  * @author ponomarev 16.07.2022
@@ -138,22 +138,12 @@ public class GroupController {
 
     private void addGroupUsers(Group group) throws ClientException, ApiException {
         try {
-           group.setVkUsers(vkService.getUsersByGroup(group));
+            group.setVkUsers(vkService.getUsersByGroup(group));
         } catch (ApiAccessException e) {
             group.setAdditionalInformation(e.getMessage());
-        }finally {
+        } finally {
             groupService.addGroup(group);
         }
     }
 
-    private String checkVkLink(String vkLink) {
-        vkLink=vkLink.trim();
-        String pattern = "(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})";
-        Pattern regex = Pattern.compile("(?<=\\.\\D{3}\\/)(\\w+)\\/?");
-        Matcher matcher =  regex.matcher(vkLink);
-        if (Pattern.matches(pattern, vkLink)&&matcher.find()) {
-            return matcher.group(0);
-        }
-        return vkLink;
-    }
 }

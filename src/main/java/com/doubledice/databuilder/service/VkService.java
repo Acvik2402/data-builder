@@ -20,6 +20,8 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 import java.util.stream.Collectors;
 
 /**
@@ -165,5 +167,26 @@ public class VkService {
             }
             return groupUsers;
         }
+    }
+
+    public static String checkVkLink(String vkLink) {
+        vkLink=vkLink.trim();
+        String pattern = "(https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|www\\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\\.[^\\s]{2,}|https?:\\/\\/(?:www\\.|(?!www))[a-zA-Z0-9]+\\.[^\\s]{2,}|www\\.[a-zA-Z0-9]+\\.[^\\s]{2,})";
+        Pattern regex = Pattern.compile("(?<=\\.\\D{3}\\/)(\\w+)\\/?");
+        Matcher matcher =  regex.matcher(vkLink);
+        if (Pattern.matches(pattern, vkLink)&&matcher.find()) {
+            return matcher.group(0);
+        }
+        return vkLink;
+    }
+
+    public String getVkId(String vkLink) {
+        Integer id = null;
+        try {
+            id = vkApiClient.utils().resolveScreenName(serviceActor, vkLink).execute().getObjectId();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return String.valueOf(id);
     }
 }

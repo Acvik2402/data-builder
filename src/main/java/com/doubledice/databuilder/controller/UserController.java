@@ -3,6 +3,7 @@ package com.doubledice.databuilder.controller;
 import com.doubledice.databuilder.dto.UserDTO;
 import com.doubledice.databuilder.model.User;
 import com.doubledice.databuilder.service.UserService;
+import com.doubledice.databuilder.service.VkService;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import lombok.AllArgsConstructor;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -26,6 +27,7 @@ import java.util.List;
 @RequestMapping("/users")
 public class UserController {
     private UserService userService;
+    VkService vkService;
 
     @Autowired
     private ObjectMapper objectMapper;
@@ -42,6 +44,8 @@ public class UserController {
         if (result.hasErrors()) {
             return "user-create";
         }
+        String correctLink = vkService.getVkId(VkService.checkVkLink(user.getVkLink()));
+        user.setVkLink(correctLink);
         userService.addUser(objectMapper.convertValue(user, User.class));
         return "redirect:/users/user-list";
     }
