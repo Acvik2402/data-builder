@@ -1,4 +1,4 @@
-package com.doubledice.databuilder.bean;
+package com.doubledice.databuilder.config;
 
 import com.vk.api.sdk.client.TransportClient;
 import com.vk.api.sdk.client.VkApiClient;
@@ -13,10 +13,10 @@ import com.vk.api.sdk.objects.ServiceClientCredentialsFlowResponse;
 import com.vk.api.sdk.objects.UserAuthResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
+import org.springframework.context.annotation.Configuration;
 import org.springframework.context.annotation.Lazy;
 import org.springframework.context.annotation.Scope;
 import org.springframework.core.env.Environment;
-import org.springframework.stereotype.Component;
 
 import java.util.Objects;
 
@@ -24,9 +24,8 @@ import java.util.Objects;
  * @author ponomarev 16.08.2022
  */
 @Lazy
-//@Data
-@Component
-public class BeanBuilder {
+@Configuration
+public class BeansVKConfig {
     public static final String CLIENT_ID = "spring.security.oauth2.client.registration.vk-app.clientId";
     public static final String CLIENT_SECRET = "spring.security.oauth2.client.registration.vk-app.clientSecret";
     public static final String REDIRECT_URI = "spring.security.oauth2.client.registration.vk-app.redirect-uri";

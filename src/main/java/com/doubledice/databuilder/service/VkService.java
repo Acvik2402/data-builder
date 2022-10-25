@@ -1,6 +1,6 @@
 package com.doubledice.databuilder.service;
 
-import com.doubledice.databuilder.bean.BeanBuilder;
+import com.doubledice.databuilder.config.BeansVKConfig;
 import com.doubledice.databuilder.model.Analytic;
 import com.doubledice.databuilder.model.Group;
 import com.doubledice.databuilder.model.User;
@@ -33,7 +33,7 @@ public class VkService {
     public static final int ITERATION_SIZE = 100;
     @Autowired
     @Lazy
-    private BeanBuilder beanBuilder;
+    private BeansVKConfig beansVKConfig;
     @Autowired
     private final UserService userService;
     @Autowired

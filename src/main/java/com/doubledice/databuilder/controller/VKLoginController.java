@@ -1,9 +1,6 @@
 package com.doubledice.databuilder.controller;
 
-import com.doubledice.databuilder.bean.BeanBuilder;
-import com.vk.api.sdk.exceptions.ApiException;
-import com.vk.api.sdk.exceptions.ClientException;
-import lombok.AllArgsConstructor;
+import com.doubledice.databuilder.config.BeansVKConfig;
 import org.apache.commons.lang3.StringUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
@@ -23,7 +20,7 @@ import org.springframework.web.servlet.mvc.support.RedirectAttributes;
 @RequestMapping("/vk")
 public class VKLoginController {
     @Autowired @Lazy
-    private BeanBuilder beanBuilder;
+    private BeansVKConfig beansVKConfig;
 
 
 //    public static String vkCode;
@@ -48,8 +45,8 @@ public class VKLoginController {
     public String settingCode(@RequestParam(name = "code") String code) {
         if (StringUtils.isNotEmpty(code)) {
             try {
-                beanBuilder.setCode(code);
-                beanBuilder.serviceActor();
+                beansVKConfig.setCode(code);
+                beansVKConfig.serviceActor();
 //                beanBuilder.userAuthResponse();
 //                beanBuilder.groupAuthResponse();
                 return "redirect:/group/groups";
