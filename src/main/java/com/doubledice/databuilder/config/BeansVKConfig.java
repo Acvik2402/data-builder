@@ -41,48 +41,7 @@ public class BeansVKConfig {
     @Autowired
     @Lazy
     private Environment env;
-    @Autowired
-    @Lazy
-    private VkApiClient vk;
-    @Autowired
-    @Lazy
-    private GroupAuthResponse groupAuthResponse;
-    @Autowired
-    @Lazy
-    private UserAuthResponse userAuthResponse;
-    @Autowired
-    @Lazy
-    private GroupActor groupActor;
-    @Autowired
-    @Lazy
-    private UserActor userActor;
-    @Autowired
-    @Lazy
-    private ServiceActor serviceActor;
 
-    public VkApiClient getVk() {
-        return vk;
-    }
-
-    public GroupAuthResponse getGroupAuthResponse() {
-        return groupAuthResponse;
-    }
-
-    public UserAuthResponse getUserAuthResponse() {
-        return userAuthResponse;
-    }
-
-    public GroupActor getGroupActor() {
-        return groupActor;
-    }
-
-    public UserActor getUserActor() {
-        return userActor;
-    }
-
-    public ServiceActor getServiceActor() {
-        return serviceActor;
-    }
 
     @Bean
     @Scope("singleton")
@@ -101,7 +60,7 @@ public class BeansVKConfig {
     @Lazy
     @Bean
     @Scope("singleton")
-    public GroupAuthResponse groupAuthResponse() throws ApiException, ClientException {
+    public GroupAuthResponse groupAuthResponse(VkApiClient vk) throws ApiException, ClientException {
         GroupAuthResponse authResp = null;
         try {
             authResp = vk.oAuth()
@@ -122,7 +81,7 @@ public class BeansVKConfig {
     @Bean
     @Scope("prototype")
 //    @Scope("singleton")
-    public GroupActor groupActor() {
+    public GroupActor groupActor(GroupAuthResponse groupAuthResponse) {
 //        GroupAuthResponse authResp = authResponse;
         Integer groupId = Integer.valueOf(Objects.requireNonNull(env.getProperty(GROUP_IDS)));
 //        try {
@@ -144,7 +103,7 @@ public class BeansVKConfig {
     @Lazy
     @Bean
 //    @Scope("singleton")
-    public UserAuthResponse userAuthResponse() throws ApiException, ClientException {
+    public UserAuthResponse userAuthResponse(VkApiClient vk) throws ApiException, ClientException {
         UserAuthResponse authResp = null;
         try {
             authResp = vk.oAuth()
@@ -165,7 +124,7 @@ public class BeansVKConfig {
     @Bean
     @Scope("prototype")
 //    @Scope("singleton")
-    public UserActor userActor() {
+    public UserActor userActor(UserAuthResponse userAuthResponse) {
         return new UserActor(userAuthResponse.getUserId(), userAuthResponse.getAccessToken());
     }
 
