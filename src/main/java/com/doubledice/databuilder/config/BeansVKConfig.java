@@ -80,30 +80,16 @@ public class BeansVKConfig {
     @Lazy
     @Bean
     @Scope("prototype")
-//    @Scope("singleton")
     public GroupActor groupActor(GroupAuthResponse groupAuthResponse) {
-//        GroupAuthResponse authResp = authResponse;
         Integer groupId = Integer.valueOf(Objects.requireNonNull(env.getProperty(GROUP_IDS)));
-//        try {
-//            authResp = vk.oAuth()
-//                    .groupAuthorizationCodeFlow(Integer.valueOf(Objects.requireNonNull(env.getProperty(CLIENT_ID))),
-//                            env.getProperty(CLIENT_SECRET),
-//                            env.getProperty(REDIRECT_URI),
-//                            VKLoginController.vkCode)
-//                    .execute();
-//        } catch (OAuthException e) {
-//            e.getRedirectUri();
-//        } catch (ClientException | ApiException e) {
-//            throw new RuntimeException(e);
-//        }
         return new GroupActor(groupId, groupAuthResponse.getAccessTokens().get(groupId));
     }
 
 
+
+//  @Bean(initMethod = "") maybe can use
     @Lazy
     @Bean
-//    @Scope("singleton")
-//    @Bean(initMethod = "") maybe can use
     public UserAuthResponse userAuthResponse(VkApiClient vk) throws ApiException, ClientException {
         UserAuthResponse authResp = null;
         try {
@@ -121,31 +107,17 @@ public class BeansVKConfig {
         return authResp;
     }
 
-    //        @Lazy
+
     @Bean
     @Scope("prototype")
-//    @Scope("singleton")
     public UserActor userActor(UserAuthResponse userAuthResponse) {
         return new UserActor(userAuthResponse.getUserId(), userAuthResponse.getAccessToken());
     }
 
-    //    @Lazy
     @Bean
     @Scope("singleton")
     public ServiceActor serviceActor() {
         ServiceClientCredentialsFlowResponse authResp = null;
-//        try {
-//            authResp = vk.oAuth()
-//                    .serviceClientCredentialsFlow(Integer.valueOf(Objects.requireNonNull(env.getProperty(CLIENT_ID))),
-//                            env.getProperty(CLIENT_SECRET))
-//                    .execute();
-//        } catch (OAuthException e) {
-//            e.getRedirectUri();
-//        } catch (ClientException | ApiException e) {
-//            throw new RuntimeException(e);
-//        }
-//        return new ServiceActor(Integer.valueOf(Objects.requireNonNull(env.getProperty(CLIENT_ID))),
-//                Objects.requireNonNull(authResp).getAccessToken());
         return new ServiceActor(Integer.valueOf(Objects.requireNonNull(env.getProperty(CLIENT_ID))),
                 env.getProperty(CLIENT_SECRET), env.getProperty(SERVICE_SECRET));
     }
