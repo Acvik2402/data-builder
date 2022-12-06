@@ -117,7 +117,6 @@ public class BeansVKConfig {
     @Bean
     @Scope("singleton")
     public ServiceActor serviceActor() {
-        ServiceClientCredentialsFlowResponse authResp = null;
         return new ServiceActor(Integer.valueOf(Objects.requireNonNull(env.getProperty(CLIENT_ID))),
                 env.getProperty(CLIENT_SECRET), env.getProperty(SERVICE_SECRET));
     }
