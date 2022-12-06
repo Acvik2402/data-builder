@@ -1,0 +1,31 @@
+# back
+# устанавливаем самую версию JVM
+FROM adoptopenjdk/openjdk8:ubi
+
+RUN export DOCKER_BUILDKIT=0
+RUN export COMPOSE_DOCKER_CLI_BUILD=0
+
+# указываем ярлык. Например, разработчика образа и проч. Необязательный пункт.
+LABEL maintainer=rabota24021993@gmail.com
+# указываем точку монтирования для внешних данных внутри контейнера (как мы помним, это Линукс)
+VOLUME /tmp
+# указываем, где в нашем приложении лежит джарник
+ARG JAR_FILE=build/libs/data-builder-0.0.1-SNAPSHOT.jar
+# указываем, envirement variables
+ENV SERVICE_SECRET=cdc1ee44cdc1ee44cdc1ee4496cdbc4f71ccdc1cdc1ee44aeccfc9f49fdf72d79998ea6
+ENV CLIENT_SECRET=YpGHDSsRbGpE7Spijq4K
+ENV CLIENT_ID=8233269
+ENV DB_URL=jdbc:postgresql://data-builder-db:5432/double-dice-data?createDatabaseIfNotExist=true
+ENV DB_USERNAME=postgres
+ENV DB_PASS=pg123
+#ENV DEFAULT_USER_NAME=user
+#ENV DEFAULT_USER_PASS={bcrypt}$2a$12$muLKlsMSGnFcE89o1LOedOIUGLemHli7jNYR4qWEczSI9gj.KeT3O
+#ENV DEFAULT_ADMIN_NAME=admin;
+#ENV DEFAULT_ADMIN_PASS={bcrypt}$2a$12$0bcYuPVXqa/4sbNfY/Xd1eLwZ2d8xfDgagmbd9GZHClK14nCyUm2m
+# добавляем джарник в образ под именем rebounder-chain-backend.jar
+ADD ${JAR_FILE} data-builder.jar
+
+# внешний порт, по которому наше приложение будет доступно извне
+EXPOSE 8780
+#ENTRYPOINT ["java", "-Dspring.security.oauth2.client.registration.vk-app.serviceSecret=${SERVICE_SECRET}", "-Dspring.security.oauth2.client.registration.vk-app.clientSecret=${CLIENT_SECRET}","-Dspring.security.oauth2.client.registration.vk-app.clientId=${CLIENT_ID}", "-Dspring.datasource.url=${DB_URL}", "-Dspring.datasource.password=${DB_PASS}", "-Dspring.datasource.username=${DB_USERNAME}", "-Dspring.security.oauth2.client.registration.vk-app.defaultUserName=${DEFAULT_USER_NAME}", "-Dspring.security.oauth2.client.registration.vk-app.defaultUserPass=${DEFAULT_USER_PASS}", "-Dspring.security.oauth2.client.registration.vk-app.defaultAdminName=${DEFAULT_ADMIN_NAME}", "-Dspring.security.oauth2.client.registration.vk-app.defaultAdminPass=${DEFAULT_ADMIN_PASS}","-jar", "/data-builder.jar"]
+ENTRYPOINT ["java", "-Dspring.security.oauth2.client.registration.vk-app.serviceSecret=${SERVICE_SECRET}", "-Dspring.security.oauth2.client.registration.vk-app.clientSecret=${CLIENT_SECRET}","-Dspring.security.oauth2.client.registration.vk-app.clientId=${CLIENT_ID}", "-Dspring.datasource.url=${DB_URL}", "-Dspring.datasource.password=${DB_PASS}", "-Dspring.datasource.username=${DB_USERNAME}", "-jar", "/data-builder.jar"]

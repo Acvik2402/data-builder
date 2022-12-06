@@ -103,6 +103,7 @@ public class BeansVKConfig {
     @Lazy
     @Bean
 //    @Scope("singleton")
+//    @Bean(initMethod = "") maybe can use
     public UserAuthResponse userAuthResponse(VkApiClient vk) throws ApiException, ClientException {
         UserAuthResponse authResp = null;
         try {

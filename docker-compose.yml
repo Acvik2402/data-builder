@@ -1,0 +1,44 @@
+version: '3.1'
+services:
+  data-builder-db:
+    container_name: data-builder-db
+    image: "postgres:latest"
+    restart: on-failure
+    # <Port exposed> : <Port running inside container>
+    ports:
+      - "5632:5432"
+    environment:
+      POSTGRES_DB: double-dice-data
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pg123
+    # Opens port 5632 on the container
+    expose:
+      - 5632
+  #    networks:
+  #      - defaultdata
+
+  data-builder:
+    container_name: data-builder
+    depends_on:
+      - data-builder-db
+    build:
+      context: .
+    deploy:
+      resources:
+        limits:
+          cpus: '0.70'
+          memory: 1700M
+        reservations:
+          cpus: '0.15'
+          memory: 200M
+    restart: on-failure
+    ports:
+      - "8780:8780"
+    expose:
+      - 8780
+#    networks:
+#      - outside
+#      - default
+#networks:
+#  outside:
+##    external: true
