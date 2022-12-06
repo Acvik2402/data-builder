@@ -1,4 +1,6 @@
 spring:
+  profiles:
+    active: dev
   jackson:
     serialization:
       indent-output: true
@@ -17,9 +19,9 @@ spring:
           in_clause_parameter_padding: true
     defer-datasource-initialization: true
   datasource:
-    url: jdbc:postgresql://localhost:5432/double-dice-data?createDatabaseIfNotExist=true
-    username: postgres
-    password: 123
+    url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5433}/${PGDATABASE:double-dice-data}
+    username: ${DB_USERNAME:pguser}
+    password: ${DB_PASS:pgpassword}
     driverClassName: org.postgresql.Driver
   sql:
     init:
@@ -30,19 +32,19 @@ spring:
         registration:
           vk-app:
             provider: vk
-            clientId: 12121212
-            clientSecret: 121212121
-            serviceSecret: 1212121
+            clientId: ${CLIENT_ID:8233269}
+            clientSecret: ${CLIENT_SECRET:"12121212"}
+            serviceSecret: ${SERVICE_SECRET:"121212121"}
             client-authentication-method: basic
             authorization-grant-type: authorization_code
             group_ids: "72574230"
-            defaultUserName: "user"
-            defaultUserPass: "1212121"
-            defaultAdminName: "admin"
-            defaultAdminPass: "12121212"
+            defaultUserName: ${DEFAULT_USER_NAME:"user"}
+            defaultUserPass: ${DEFAULT_USER_PASS:"{bcrypt}$2a$12$muLKlsMSGnFcE89o1LOedOIUGLemHli7jNYR4qWEczSI9gj.KeT3O"}
+            defaultAdminName: ${DEFAULT_ADMIN_NAME:"admin"}
+            defaultAdminPass: ${DEFAULT_ADMIN_PASS:"{bcrypt}$2a$12$0bcYuPVXqa/4sbNfY/Xd1eLwZ2d8xfDgagmbd9GZHClK14nCyUm2m"}
             scope:
               - manage
-            redirect-uri: "http://localhost/vk/code"
+            redirect-uri: "http://141.8.193.6/vk/code"
         provider:
           vk:
             authorization-uri: https://oauth.vk.com/authorize
@@ -50,7 +52,19 @@ spring:
             user-info-uri: https://api.vk.com/method/users.get
   main:
     allow-circular-references: true
+  flyway:
+    baseline-on-migrate: true
+    locations:
+      - classpath:db/migration
+      - classpath:db/callback   # <-- for sql callback scripts
+    enabled: false
+    url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5433}/${PGDATABASE:double-dice-data}
+    schemas: ${PGDATABASE:double-dice-data}
+    user: ${DB_USERNAME:pguser}
+    password: ${DB_PASS:pgpassword}
+
 server:
   port: 80
+
 
 

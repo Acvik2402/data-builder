@@ -18,10 +18,6 @@ ENV CLIENT_ID=8233269
 ENV DB_URL=jdbc:postgresql://data-builder-db:5432/double-dice-data?createDatabaseIfNotExist=true
 ENV DB_USERNAME=postgres
 ENV DB_PASS=pg123
-#ENV DEFAULT_USER_NAME=user
-#ENV DEFAULT_USER_PASS={bcrypt}$2a$12$muLKlsMSGnFcE89o1LOedOIUGLemHli7jNYR4qWEczSI9gj.KeT3O
-#ENV DEFAULT_ADMIN_NAME=admin;
-#ENV DEFAULT_ADMIN_PASS={bcrypt}$2a$12$0bcYuPVXqa/4sbNfY/Xd1eLwZ2d8xfDgagmbd9GZHClK14nCyUm2m
 # добавляем джарник в образ под именем rebounder-chain-backend.jar
 ADD ${JAR_FILE} data-builder.jar
 
