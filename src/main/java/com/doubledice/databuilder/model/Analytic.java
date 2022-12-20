@@ -23,6 +23,7 @@ public class Analytic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
+    //todo add creator Id for sorting in future    
     @OneToOne(targetEntity = Group.class)
     private Group group;
     @ManyToMany(targetEntity = User.class,fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
