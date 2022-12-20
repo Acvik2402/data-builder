@@ -26,6 +26,7 @@ public class Group {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
     private String groupName;
+    //todo add creator Id for sorting in future   
     @NotNull
     @Column(name = "vk_link", unique = true)
     private String vkLink;
