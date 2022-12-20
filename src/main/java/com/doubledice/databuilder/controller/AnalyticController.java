@@ -24,6 +24,7 @@ public class AnalyticController {
     @Autowired
     private ObjectMapper objectMapper;
 
+    //todo add sorting by creator id 
     @GetMapping("/analytics")
     public String findAll(Model model) {
         List<Analytic> analytics = analyticService.findAll();
