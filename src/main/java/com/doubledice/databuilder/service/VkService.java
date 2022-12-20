@@ -99,6 +99,7 @@ public class VkService {
             if (!CollectionUtils.isEmpty(exitUsersId) || !CollectionUtils.isEmpty(joinedUsersId)) {
                 Set<User> exitUsers = getUsersByVkId(exitUsersId, null);
                 Set<User> joinedUsers = getUsersByVkId(joinedUsersId, group);
+                //todo add creator Id for sorting in future    
                 Analytic analytic = new Analytic(group, exitUsers, joinedUsers);
                 analyticService.addAnalytic(analytic);
                 if (!CollectionUtils.isEmpty(exitUsersId)) {
