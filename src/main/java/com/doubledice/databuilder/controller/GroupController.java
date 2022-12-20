@@ -36,6 +36,7 @@ public class GroupController {
     @Autowired
     private ObjectMapper objectMapper;
 
+    //todo add sorting by creator Id and adding all groups by admin user 
     @GetMapping("/groups")
     public String findAll(Model model) {
 //        List<GroupDTO> groups = groupService.findAll().stream().map(group -> objectMapper.convertValue(group, GroupDTO.class)).collect(Collectors.toList());
@@ -50,6 +51,7 @@ public class GroupController {
         return "group-create";
     }
 
+    //todo add creator Id for sorting in future
     @PostMapping("/group-create")
     public String addGroup(@Valid Group group, BindingResult result, Model model) {
         model.addAttribute("group", new Group());
