@@ -2,6 +2,7 @@ package com.doubledice.databuilder.service;
 
 import com.doubledice.databuilder.config.BeansVKConfig;
 import com.doubledice.databuilder.dto.AnalyticDTO;
+import com.doubledice.databuilder.dto.notification.AnalyticNotification;
 import com.doubledice.databuilder.model.Analytic;
 import com.doubledice.databuilder.model.Group;
 import com.doubledice.databuilder.model.User;
@@ -35,7 +36,7 @@ public class VkService {
     public static final int ITERATION_SIZE = 100;
     private final UserService userService;
     private final AnalyticService analyticService;
-    private final KafkaTemplate<Long, AnalyticDTO> kafkaTemplate;
+    private final KafkaTemplate<Long, AnalyticNotification> kafkaTemplate;
     private final GroupService groupService;
     @Lazy
     private VkApiClient vkApiClient;
@@ -44,7 +45,7 @@ public class VkService {
 
   @Autowired
   public VkService(UserService userService, AnalyticService analyticService,
-                   KafkaTemplate<Long, AnalyticDTO> kafkaTemplate,
+                   KafkaTemplate<Long, AnalyticNotification> kafkaTemplate,
                    GroupService groupService,
                    VkApiClient vkApiClient,
                    ServiceActor serviceActor) {
@@ -111,7 +112,8 @@ public class VkService {
                 Set<User> joinedUsers = getUsersByVkId(joinedUsersId, group);
                 //todo add creator Id for sorting in future    
                 Analytic analytic = new Analytic(group, exitUsers, joinedUsers);
-                kafkaTemplate.send("analytic.new", analyticService.addAnalytic(analytic).toDto());
+                AnalyticNotification analyticNotification = convertData(analyticService.addAnalytic(analytic));
+                kafkaTemplate.send("analytic.new", analyticNotification);
                 if (!CollectionUtils.isEmpty(exitUsersId)) {
                     updateUsersInfo(exitUsers, group, true);
                 }
@@ -119,7 +121,14 @@ public class VkService {
         }
     }
 
-    /**
+  private AnalyticNotification convertData(Analytic analytic) {
+    AnalyticNotification analyticNotification = new AnalyticNotification("Изменение в участниках группы",
+            analytic.getGroup().getGroupName(),
+            analytic.toString());
+    return analyticNotification;
+  }
+
+  /**
      * обновляем информацию в БД об участниках группы, если true - то удаляем
      *
      * @param users  участники, которые пришли или ушли
@@ -164,7 +173,6 @@ public class VkService {
             Set<User> groupUsers = new HashSet<>();
             for (List<String> iterSublist : ListUtils.partition(userIds, ITERATION_SIZE)) {
                 vkApiClient.users().get(serviceActor).userIds(iterSublist).lang(Lang.RU).execute().forEach(s -> {
-
                     User user = userService.findByVkLink(s.getId().toString());
                     if (user == null) {
                         user = new User();

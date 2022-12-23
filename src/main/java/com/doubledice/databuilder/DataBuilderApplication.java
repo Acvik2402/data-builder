@@ -18,12 +18,12 @@ public class DataBuilderApplication {
 
     public static void main(String[] args) throws IOException {
         SpringApplication.run(DataBuilderApplication.class, args);
-        openHomePage();
+//        openHomePage();
     }
 
-    private static void openHomePage() throws IOException {
-        Runtime rt = Runtime.getRuntime();
-        rt.exec("rundll32 url.dll,FileProtocolHandler " + "http://localhost");
-    }
+//    private static void openHomePage() throws IOException {
+//        Runtime rt = Runtime.getRuntime();
+//        rt.exec("rundll32 url.dll,FileProtocolHandler " + "http://localhost");
+//    }
 
 }

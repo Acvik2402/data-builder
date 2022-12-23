@@ -1,6 +1,7 @@
 package com.doubledice.databuilder.config;
 
 import com.doubledice.databuilder.dto.AnalyticDTO;
+import com.doubledice.databuilder.dto.notification.AnalyticNotification;
 import org.apache.kafka.clients.producer.ProducerConfig;
 import org.apache.kafka.common.serialization.LongSerializer;
 import org.springframework.beans.factory.annotation.Value;
@@ -39,13 +40,13 @@ public class KafkaProducerConfig {
   }
 
   @Bean
-  public ProducerFactory<Long, AnalyticDTO> producerFactory() {
+  public ProducerFactory<Long, AnalyticNotification> producerFactory() {
     return new DefaultKafkaProducerFactory<>(producerConfigs());
   }
 
   @Bean
-  public KafkaTemplate<Long, AnalyticDTO> kafkaTemplate() {
-    KafkaTemplate<Long, AnalyticDTO> template = new KafkaTemplate<>(producerFactory());
+  public KafkaTemplate<Long, AnalyticNotification> kafkaTemplate() {
+    KafkaTemplate<Long, AnalyticNotification> template = new KafkaTemplate<>(producerFactory());
     template.setMessageConverter(new StringJsonMessageConverter());
     return template;
   }
