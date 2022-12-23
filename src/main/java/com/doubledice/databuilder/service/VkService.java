@@ -1,7 +1,5 @@
 package com.doubledice.databuilder.service;
 
-import com.doubledice.databuilder.config.BeansVKConfig;
-import com.doubledice.databuilder.dto.AnalyticDTO;
 import com.doubledice.databuilder.dto.notification.AnalyticNotification;
 import com.doubledice.databuilder.model.Analytic;
 import com.doubledice.databuilder.model.Group;
@@ -99,6 +97,14 @@ public class VkService {
         }
     }
 
+  /**
+   * метод сверки участников группы на текущей момент с участниками на момент прошлого сканирования(или проверки)
+   * по результатам создается объект аналитики если есть хоть один вошедший и/или вышедший участник
+   *
+   * @param group
+   * @throws ClientException
+   * @throws ApiException
+   */
     public void scanExistingGroup(Group group) throws ClientException, ApiException {
         List<String> dataGroupUserIdList = new ArrayList<>(group.getVkUsersIdLinks());
         List<String> currentGroupUserIdList = new ArrayList<>(getUsersIdLinksByGroupLink(group.getVkLink()));
@@ -112,36 +118,37 @@ public class VkService {
                 Set<User> joinedUsers = getUsersByVkId(joinedUsersId, group);
                 //todo add creator Id for sorting in future    
                 Analytic analytic = new Analytic(group, exitUsers, joinedUsers);
-                AnalyticNotification analyticNotification = convertData(analyticService.addAnalytic(analytic));
-                kafkaTemplate.send("analytic.new", analyticNotification);
+                sendNotification(analyticService.addAnalytic(analytic));
                 if (!CollectionUtils.isEmpty(exitUsersId)) {
-                    updateUsersInfo(exitUsers, group, true);
+                    removeGroupInfoFromUsers(exitUsers, group);
                 }
             }
         }
     }
 
-  private AnalyticNotification convertData(Analytic analytic) {
+  /**
+   * отправляем уведомление о создании новой сущности через Кафку
+   *
+   * @param analytic сущность Аналитики
+   */
+  private void sendNotification(Analytic analytic) {
     AnalyticNotification analyticNotification = new AnalyticNotification("Изменение в участниках группы",
             analytic.getGroup().getGroupName(),
             analytic.toString());
-    return analyticNotification;
+    kafkaTemplate.send("analytic.new", analyticNotification);
   }
 
   /**
-     * обновляем информацию в БД об участниках группы, если true - то удаляем
+     * обновляем информацию в БД об участниках группы - удаляем группу у вышедших пользователей
      *
      * @param users  участники, которые пришли или ушли
      * @param group  группа ВК
-     * @param remove удалять или добавлять участников, если true - то удаляем
      */
-    private synchronized void updateUsersInfo(Set<User> users, Group group, boolean remove) {
-        if (remove) {
+    private synchronized void removeGroupInfoFromUsers(Set<User> users, Group group) {
             users.forEach(s -> {
                 s.removeGroup(group);
                 userService.addUser(s);
             });
-        }
     }
 
     private Set<String> getUsersIdLinksByGroupLink(String vkLink) throws ClientException, ApiException {
@@ -154,7 +161,6 @@ public class VkService {
                 Thread.currentThread().interrupt();
             }
             int groupSize = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).execute().getCount();
-
             for (int i = 0; i <= groupSize; i += ITERATION_SIZE) {
                 groupUsersLinks.addAll(vkApiClient.groups().getMembers(serviceActor).groupId(id.toString())
                         .count(ITERATION_SIZE).offset(i).execute().getItems().stream().map(String::valueOf).collect(Collectors.toList()));
