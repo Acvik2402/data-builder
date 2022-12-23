@@ -131,12 +131,12 @@ public class VkService {
    *
    * @param analytic сущность Аналитики
    */
-  private void sendNotification(Analytic analytic) {
-    AnalyticNotification analyticNotification = new AnalyticNotification("Изменение в участниках группы",
+    private void sendNotification(Analytic analytic) {
+        AnalyticNotification analyticNotification = new AnalyticNotification("Изменение в участниках группы",
             analytic.getGroup().getGroupName(),
             analytic.toString());
-    kafkaTemplate.send("analytic.new", analyticNotification);
-  }
+        kafkaTemplate.send("analytic.new", analyticNotification);
+    }
 
   /**
      * обновляем информацию в БД об участниках группы - удаляем группу у вышедших пользователей

@@ -12,9 +12,7 @@ VOLUME /tmp
 # указываем, где в нашем приложении лежит джарник
 ARG JAR_FILE=build/libs/data-builder-0.0.1-SNAPSHOT.jar
 # указываем, envirement variables
-ENV SERVICE_SECRET=cdc1ee44cdc1ee44cdc1ee4496cdbc4f71ccdc1cdc1ee44aeccfc9f49fdf72d79998ea6
-ENV CLIENT_SECRET=YpGHDSsRbGpE7Spijq4K
-ENV CLIENT_ID=8233269
+
 ENV DB_URL=jdbc:postgresql://data-builder-db:5432/double-dice-data
 ENV DB_USERNAME=postgres
 ENV DB_PASS=pg123
