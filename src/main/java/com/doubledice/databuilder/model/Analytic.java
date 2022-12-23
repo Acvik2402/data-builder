@@ -1,5 +1,6 @@
 package com.doubledice.databuilder.model;
 
+import com.doubledice.databuilder.dto.AnalyticDTO;
 import lombok.*;
 import org.springframework.data.annotation.CreatedDate;
 import org.springframework.format.annotation.DateTimeFormat;
@@ -23,7 +24,7 @@ public class Analytic {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
-    //todo add creator Id for sorting in future    
+    //todo add creator Id for sorting in future
     @OneToOne(targetEntity = Group.class)
     private Group group;
     @ManyToMany(targetEntity = User.class,fetch = FetchType.EAGER, cascade = CascadeType.REFRESH)
@@ -65,5 +66,16 @@ public class Analytic {
                 ", joinedUsers=" + joinedUsers +
                 ", date=" + date +
                 '}';
+    }
+
+    //todo configure DTO conversion correctly
+    public AnalyticDTO toDto() {
+        AnalyticDTO analyticDTO = new AnalyticDTO();
+        analyticDTO.setId(getId());
+        analyticDTO.setGroup(getGroup());
+        analyticDTO.setExitUsers(getExitUsers() != null ? getExitUsers() : null);
+        analyticDTO.setJoinedUsers(getJoinedUsers() != null ? getJoinedUsers() : null);
+        analyticDTO.setDate(getDate());
+        return analyticDTO;
     }
 }

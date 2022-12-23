@@ -18,6 +18,8 @@ spring:
           plan_parameter_metadata_max_size: 32
           in_clause_parameter_padding: true
     defer-datasource-initialization: true
+  kafka:
+    bootstrap-servers: localhost:29092
   datasource:
     url: jdbc:postgresql://${PGHOST:localhost}:${PGPORT:5433}/${PGDATABASE:double-dice-data}
     username: ${DB_USERNAME:pguser}

@@ -1,6 +1,7 @@
 package com.doubledice.databuilder.service;
 
 import com.doubledice.databuilder.config.BeansVKConfig;
+import com.doubledice.databuilder.dto.AnalyticDTO;
 import com.doubledice.databuilder.model.Analytic;
 import com.doubledice.databuilder.model.Group;
 import com.doubledice.databuilder.model.User;
@@ -14,6 +15,7 @@ import org.apache.commons.collections4.CollectionUtils;
 import org.apache.commons.collections4.ListUtils;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Lazy;
+import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
@@ -31,23 +33,30 @@ import java.util.stream.Collectors;
 @RequiredArgsConstructor
 public class VkService {
     public static final int ITERATION_SIZE = 100;
-    @Autowired
-    @Lazy
-    private BeansVKConfig beansVKConfig;
-    @Autowired
     private final UserService userService;
-    @Autowired
     private final AnalyticService analyticService;
-    @Autowired
+    private final KafkaTemplate<Long, AnalyticDTO> kafkaTemplate;
     private final GroupService groupService;
-    @Autowired
     @Lazy
     private VkApiClient vkApiClient;
-    @Autowired
     @Lazy
     private ServiceActor serviceActor;
 
-    /**
+  @Autowired
+  public VkService(UserService userService, AnalyticService analyticService,
+                   KafkaTemplate<Long, AnalyticDTO> kafkaTemplate,
+                   GroupService groupService,
+                   VkApiClient vkApiClient,
+                   ServiceActor serviceActor) {
+    this.userService = userService;
+    this.analyticService = analyticService;
+    this.kafkaTemplate = kafkaTemplate;
+    this.groupService = groupService;
+    this.vkApiClient = vkApiClient;
+    this.serviceActor = serviceActor;
+  }
+
+  /**
      * @param vkLink - адрес страницы сообщества вк после "/"
      * @return название сообщества
      * @throws ClientException
@@ -76,7 +85,8 @@ public class VkService {
             int groupSize = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).execute().getCount();
 
             for (int i = 0; i <= groupSize; i += ITERATION_SIZE) {
-                List<String> userIds = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).count(ITERATION_SIZE).offset(i).execute().getItems().stream().map(String::valueOf).collect(Collectors.toList());
+                List<String> userIds = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString())
+                        .count(ITERATION_SIZE).offset(i).execute().getItems().stream().map(String::valueOf).collect(Collectors.toList());
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
@@ -101,7 +111,7 @@ public class VkService {
                 Set<User> joinedUsers = getUsersByVkId(joinedUsersId, group);
                 //todo add creator Id for sorting in future    
                 Analytic analytic = new Analytic(group, exitUsers, joinedUsers);
-                analyticService.addAnalytic(analytic);
+                kafkaTemplate.send("analytic.new", analyticService.addAnalytic(analytic).toDto());
                 if (!CollectionUtils.isEmpty(exitUsersId)) {
                     updateUsersInfo(exitUsers, group, true);
                 }
@@ -113,7 +123,7 @@ public class VkService {
      * обновляем информацию в БД об участниках группы, если true - то удаляем
      *
      * @param users  участники, которые пришли или ушли
-     * @param group
+     * @param group  группа ВК
      * @param remove удалять или добавлять участников, если true - то удаляем
      */
     private synchronized void updateUsersInfo(Set<User> users, Group group, boolean remove) {
@@ -137,8 +147,8 @@ public class VkService {
             int groupSize = vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).execute().getCount();
 
             for (int i = 0; i <= groupSize; i += ITERATION_SIZE) {
-                groupUsersLinks.addAll(vkApiClient.groups().getMembers(serviceActor).groupId(id.toString()).count(ITERATION_SIZE).offset(i).execute().getItems().stream().map(String::valueOf).collect(Collectors.toList()));
-
+                groupUsersLinks.addAll(vkApiClient.groups().getMembers(serviceActor).groupId(id.toString())
+                        .count(ITERATION_SIZE).offset(i).execute().getItems().stream().map(String::valueOf).collect(Collectors.toList()));
                 try {
                     Thread.sleep(500);
                 } catch (InterruptedException e) {
