@@ -1,4 +1,4 @@
-package com.doubledice.databuilder.controller;
+package com.doubledice.databuilder.controller.admin;
 
 import com.doubledice.databuilder.model.Analytic;
 import com.doubledice.databuilder.service.AnalyticService;
@@ -18,13 +18,12 @@ import java.util.List;
  */
 @Controller()
 @AllArgsConstructor
-@RequestMapping("/analytic")
+@RequestMapping("/admin/analytic")
 public class AnalyticController {
     private AnalyticService analyticService;
     @Autowired
     private ObjectMapper objectMapper;
 
-    //todo add filtering by creator id
     @GetMapping("/analytics")
     public String findAll(Model model) {
         List<Analytic> analytics = analyticService.findAll();
@@ -35,6 +34,6 @@ public class AnalyticController {
     @GetMapping("analytic-delete/{id}")
     public String deleteGroup(@PathVariable("id") Long id) {
         analyticService.deleteById(id);
-        return "redirect:/analytic/analytics";
+        return "redirect:/admin/analytic/analytics";
     }
 }

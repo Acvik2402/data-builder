@@ -56,9 +56,9 @@ public class UserController {
     }
 
     @GetMapping("/find/{vkLink}")
-    public List<User> findUserByVkLink(@NotNull @PathVariable("vkLink") String vkLink) {
-//        return userService.findAllByGroupLink(vkLink).stream().map(user -> objectMapper.convertValue(user, UserDTO.class)).collect(Collectors.toList());
-        return userService.findAllByGroupLink(vkLink);
+    public List<User> findUsersByVkGroupLink(@NotNull @PathVariable("vkLink") String vkGroupLink) {
+//        return userService.findAllByGroupLink(vkGroupLink).stream().map(user -> objectMapper.convertValue(user, UserDTO.class)).collect(Collectors.toList());
+        return userService.findAllByGroupLink(vkGroupLink);
     }
 
     @GetMapping("/user-list")
