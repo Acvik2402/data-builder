@@ -176,6 +176,7 @@ public class VkService {
     }
 
     private Set<User> getUsersByVkId(List<String> userIds, Group group) throws ClientException, ApiException {
+    // because VK Api throws Exceptions if you send lot of requersts par second
         synchronized (VkApiClient.class) {
             Set<User> groupUsers = new HashSet<>();
             for (List<String> iterSublist : ListUtils.partition(userIds, ITERATION_SIZE)) {
