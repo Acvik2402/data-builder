@@ -15,7 +15,8 @@ Required software:
 - terminal for running bash scripts
 - docker
 - docker-compose
-  (But without VK api credentials it doesn`t work, sorry)
+
+But without VK api credentials it doesn`t work, sorry
 
 to deploy application, switch to needed branch and run bash script:
 
