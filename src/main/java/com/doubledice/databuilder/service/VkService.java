@@ -73,6 +73,7 @@ public class VkService {
      * @throws ApiException
      */
     public Set<User> getUsersByGroup(Group group) throws ClientException, ApiException {
+    // because VK Api throws Exceptions if you send lot of requersts par second
         synchronized (VkApiClient.class) {
             Set<User> groupUsers = new HashSet<>();
             Integer id = vkApiClient.utils().resolveScreenName(serviceActor, group.getVkLink()).execute().getObjectId();
