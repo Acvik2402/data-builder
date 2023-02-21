@@ -152,6 +152,7 @@ public class VkService {
     }
 
     private Set<String> getUsersIdLinksByGroupLink(String vkLink) throws ClientException, ApiException {
+    // because VK Api throws Exceptions if you send lot of requersts par second
         synchronized (VkApiClient.class) {
             Set<String> groupUsersLinks = new HashSet<>();
             Integer id = vkApiClient.utils().resolveScreenName(serviceActor, vkLink).execute().getObjectId();
